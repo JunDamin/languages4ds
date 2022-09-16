@@ -50,3 +50,22 @@ and run R and install.packages(")
 sudo R
 install.packages(c("tidyverse", "rmarkdown", "reticulate", "JuliaCall"))
 ```
+
+
+for latex korean
+```
+tlmgr repository add https://cran.asia/KTUG/texlive/tlnet ktug
+tlmgr pinning add ktug *
+tlmgr install ktugbin
+tlmgr install texworks-config
+tlmgr install nanumttf hcr-lvt
+```
+
+add nanum font
+```
+wget http://cdn.naver.com/naver/NanumFont/fontfiles/NanumFont_TTF_ALL.zip
+unzip NanumFont_TTF_ALL.zip -d NanumFont
+rm -f NanumFont_TTF_ALL.zip
+sudo mv NanumFont /usr/share/fonts/
+fc-cache -f -v
+```
