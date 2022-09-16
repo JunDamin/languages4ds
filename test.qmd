@@ -1,0 +1,15 @@
+
+```{julia}
+a = 1
+println(a)
+```
+
+```{python}
+a = 1
+print(a)
+```
+
+```{r}
+a <- 1
+print(a)
+```
