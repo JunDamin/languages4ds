@@ -8,6 +8,11 @@ book:
   chapters:
     - index.qmd
     - intro.qmd
+    - setup.qmd
+    - syntax.qmd
+    - dataframe.qmd
+    - visualization.qmd
+    - statistics.qmd
     - summary.qmd
     - references.qmd
 
@@ -21,4 +26,4 @@ format:
     include-in-header: 
       text: |
         \usepackage{kotex}
-    mainfont: NanumGothic
+    mainfont: NanumMyeongjo

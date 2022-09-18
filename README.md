@@ -1,5 +1,7 @@
 init file
 
+# install quarto
+
 ``` 
 install vscode extension
 quarto
