@@ -23,7 +23,6 @@ format:
     theme: cosmo
   pdf:
     documentclass: scrreprt
-    include-in-header: 
-      text: |
-        \usepackage{kotex}
+    include-in-header:
+      - kotex.tex
     mainfont: NanumMyeongjo
