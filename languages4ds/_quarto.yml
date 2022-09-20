@@ -3,7 +3,7 @@ project:
 
 book:
   title: "languages4ds"
-  author: "Jane Doe"
+  author: "전다민"
   date: "9/16/2022"
   chapters:
     - index.qmd
