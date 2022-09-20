@@ -13,6 +13,10 @@
 
 그렇다면 세 가지 언어에서 공통적으로 보이면서 필수적인 문법들을 살펴보도록 하겠습니다.
 
+## 정수, 실수, 문자열
+
+
+
 ## 할당(assign)하기
 
 프로그래밍을 할 때 가장 많이 하는 것 중 하나는 할당이라고 생각합니다.
@@ -35,7 +39,11 @@ print(foo)
 ### Julia
 
 Julia는 `=`를 사용해서 이름에 값을 할당합니다.
-
+(줄리아에서 `;`를 각 코드 끝에 붙여서 출력이 되지 않게 할 수 있습니다.)
+```{julia}
+foo = 1;
+print(foo)
+```
 ###  R 
 R은 `<-`를 사용해서 이름에 값을 할당합니다.
 ```{r}
@@ -48,7 +56,106 @@ print(foo)
 할당할 때 `=`를 사용했기에 같은지를 비교를 할 때 `==`를 사용하는 것이 일종의 전통처럼 내려오고 있습니다. 따라서 R은 `=`를 할당에 사용하지 않음에도 `==`를 통해 비교하게 된 것으로 보입니다.
 
 
-## 연산자
+## 수학연산
+
+
+### 사칙연산
+
+
+사칙연산은 파이썬과 동일합니다.
+
+단, 화면에 출력할 때 방식은 언어별로 다소 차이가 있습니다. 
+
+::: {.panel-tabset}
+
+#### Python
+
+```{python}
+addition = 3 + 2
+substraction = 3 - 2
+multiplication = 3 * 2
+division = 3 / 2
+
+print(addition, substraction, multiplication, division, sep="\n")
+
+```
+
+#### Julia 
+
+`seperator`를 별도로 지정할 수 없어 직접 문자열을 만들어야 합니다.
+
+```{julia}
+addition = 3 + 2;
+substraction = 3 - 2;
+multiplication = 3 * 2;
+division = 3 / 2;
+
+println(join([addition, substraction, multiplication, division], "\n"))
+
+```
+#### R
+
+`cat`이란 함수를 사용하여 표시할 수 있습니다.
+
+```{r}
+addition = 3 + 2
+substraction = 3 - 2
+multiplication = 3 * 2
+division = 3 / 2
+
+cat(addition, substraction, multiplication, division, sep="\n")
+```
+
+:::
+
+[참고링크](https://kilhwan.github.io/rprogramming/)
+
+### 수학연산 with 문자열(string)
+
+문자열을 더하면 어떤 일이 발생할까요?
+언어별로 차이를 봅시다.
+
+::: {.panel-tabset}
+
+
+#### 파이썬
+
+파이썬에서는 두 문자열을 더하거나 문자열을 정수로 곱할 수 있습니다.
+
+```{python}
+foo = "foo"
+bar = "bar"
+print(foo + bar)
+```
+
+```{python}
+foo = "foo"
+bar = "bar"
+print(foo * 3)
+```
+
+#### Julila
+
+줄리아에서 두 문자열을 곱하면 두 문자열을 연결한 것과 같은 결과를 얻을 수 있습니다.
+
+```{julia}
+foo = "foo";
+bar = "bar";
+println(foo * bar)
+```
+
+Julia에서 두 문자열을 붙이는 효과가 있었고 나머지 언어에서는 불가능 했습니다.
+
+그러면 숫자에 문자열을 곱하면 어떻게 될까요?
+
+
+#### R
+
+R에서는 문자열에 사칙연산을 할 수는 없습니다.
+
+:::
+
+
 
 ## 조건문
 
