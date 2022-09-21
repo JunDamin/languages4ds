@@ -23,11 +23,12 @@ sudo ln -s /opt/julia-1.8.1/bin/julia /usr/bin/julia
 ```
 
 
-```
+
 # install R
 
 or you can use R container.
 
+```
 sudo vi /etc/apt/sources.list
 ```
 
@@ -70,4 +71,16 @@ unzip NanumFont_TTF_ALL.zip -d NanumFont
 rm -f NanumFont_TTF_ALL.zip
 sudo mv NanumFont /usr/share/fonts/
 fc-cache -f -v
+```
+
+to solve tex error
+
+you should setting font in tex.
+
+[참고링크](https://kilhwan.github.io/rprogramming/)
+
+
+add below code to `~/.bash_aliases`
+```
+alias python='python3'
 ```

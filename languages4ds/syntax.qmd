@@ -380,10 +380,6 @@ true ⊻ true
 ```{julia}
 ~false & true 
 ```
-:::
-
-
-
 
 #### R
 
@@ -457,6 +453,8 @@ strsplit("abc def", split=" ")
 ## 조건문
 
 
+::: {.panel-tabset}
+
 #### Python
 ```{python}
 a = 1
@@ -490,6 +488,133 @@ if(a>0){
 
 ## 순환문
 
+
+### for loop 
+
+::: {.panel-tabset}
+
+#### Python
+```{python}
+names = ["Python", "Julia", "R"]
+
+for name in names:
+    print(name) 
+
+```
+
+#### Julia
+
+```{julia}
+names = ["Python", "Julia", "R"]
+
+for name in names
+    println(name) 
+end
+```
+
+#### R
+
+```{r}
+names = c("Python", "Julia", "R")
+
+for (name in names) {
+    print(name) 
+}
+```
+:::
+
+
+### while loop 
+
+::: {.panel-tabset}
+
+#### Python
+```{python}
+names = ["Python", "Julia", "R"]
+i = 0 
+
+while i < len(names):
+    print(names[i]) 
+    i += 1
+
+```
+
+#### Julia
+
+```{julia}
+names = ["Python", "Julia", "R"]
+i = 1
+
+while i <= length(names)
+    println(names[i]) 
+    i += 1
+end
+```
+
+#### R
+
+```{r}
+names = c("Python", "Julia", "R")
+i = 1
+
+while (i <= length(names)) {
+    print(names[i]) 
+    i = i + 1
+}
+```
+:::
+
 ## 함수 
+
+
+::: {.panel-tabset}
+
+#### Python
+```{python}
+
+def func(names):
+    i = 0 
+    while i < len(names):
+        print(names[i]) 
+        i += 1
+    return None
+
+names = ["Python", "Julia", "R"]
+func(names)
+```
+
+#### Julia
+
+```{julia}
+
+function func(names)
+    i = 1
+    while i <= length(names)
+        println(names[i]) 
+        i += 1
+    end
+end
+
+names = ["Python", "Julia", "R"]
+func(names)
+```
+
+#### R
+
+```{r}
+
+func <- function(names) {
+    i = 1
+    while (i <= length(names)) {
+        print(names[i]) 
+        i = i + 1
+    }
+}
+
+names = c("Python", "Julia", "R")
+func(names)
+```
+:::
+
 
 ## 데이터 분석 프로세스가 무엇인지 알고 어떻게 그것을 각 언어에서 해보는지 정리해 보자.
