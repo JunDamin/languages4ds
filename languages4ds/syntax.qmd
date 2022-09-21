@@ -275,19 +275,218 @@ R에서는 문자열에 `**`나 `^`를 사용해서 구할 수 있습니다.
 
 ### 비교 연산자
 
-> < >= <=
+::: {.panel-tabset}
+== > < >= <=
+
+#### Python
+
+```{python}
+1 == 1
+```
+
+```{python}
+1 is 1
+```
+
+```{python}
+1 > 1
+```
+
+```{python}
+1 >= 1
+```
+
+
+#### Julia
+
+```{julia}
+1 == 1
+```
+
+```{julia}
+1 ≡ 1
+```
+
+```{julia}
+1 > 1
+```
+
+```{julia}
+1 >= 1
+```
+
+#### R
+
+```{r}
+1 == 1
+```
+
+```{r}
+1 > 1
+```
+
+```{r}
+1 >= 1
+```
+
+:::
 
 ### 논리 연산
 
 and or xor
 
+::: {.panel-tabset}
+#### Python
+
+```{python}
+True and True
+```
+
+```{python}
+True or False
+```
+
+```{python}
+True & True
+```
+
+```{python}
+True | False
+```
+
+```{python}
+True ^ True
+```
+
+```{python}
+~False and True 
+```
+
+
+#### Julia
+
+```{julia}
+true & true
+```
+
+```{julia}
+true | false
+```
+
+```{julia}
+true ⊻ true
+```
+
+```{julia}
+~false & true 
+```
+:::
+
+
+
+
+#### R
+
+```{r}
+TRUE & TRUE
+```
+
+```{r}
+TRUE | FALSE
+```
+
+```{r}
+xor(TRUE, TRUE)
+```
+
+```{r}
+!FALSE & TRUE 
+```
+:::
+
+
 ## 문자열 다루기
 
 ### 결합
 
+::: {.panel-tabset}
+
+
+#### Python
+```{python}
+"abc" + "def"
+```
+
+#### Julia
+
+```{julia}
+"abc" * "def"
+```
+
+#### R
+
+```{r}
+paste("abc", "def", sep="")
+```
+:::
+
 ### 분리
 
+::: {.panel-tabset}
+
+
+#### Python
+```{python}
+"abc def".split(" ")
+```
+
+#### Julia
+
+```{julia}
+split("abc def")
+```
+
+#### R
+
+```{r}
+strsplit("abc def", split=" ")
+```
+:::
+
+
 ## 조건문
+
+
+#### Python
+```{python}
+a = 1
+
+if a > 0:
+    print(a) 
+
+```
+
+#### Julia
+
+```{julia}
+a = 1;
+if a > 0
+    print(a)
+end
+```
+
+#### R
+
+```{r}
+a = 1
+
+if(a>0){
+    print(a)
+}
+```
+:::
+
+
 
 ## 순환문
 
