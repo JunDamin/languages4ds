@@ -1,0 +1,80 @@
+# Data를 다루는 기본 : Dataframe
+
+많이들 일반적으로 말하는 데이터는 테이블형 테이터라고 합니다.
+그런 데이터를 잘 다룰 수 있게 구현 된 것이 `Dataframe`이라고 불리는 것입니다.
+
+`Dataframe`은 아마도 통계에서 다루는 `R`에서 영감을 받아서 많이 만들어 진 것으로 알고 있습니다.
+그래서 `R`에서 따온 것들이 많은 것으로 알고 있습니다.
+
+`R`은 크게 두가지 스타일로 나뉩니다. 전통적인 `R` 프로그래밍과 `Tidyverse`스타일로 나뉩니다.
+최근에는 `tidyverse` 스타일이 기준이 되고 있어 `tidyverse`스타일에 대해서 배워보도록 하겠습니다.
+
+
+기본 자료는 많이들 쓰는 자료를 따서 써보도록 하겠습니다.
+
+### 패키지 설치하기
+
+각 언어별로 Dataframe을 다루는 패키지를 설치해 보도록 하겠습니다.
+
+::: {.panel-tabset}
+
+#### Python
+커맨드 창에서 아래와 같이 입력합니다.
+```{{bash}}
+pip install pandas
+conda install pandas
+pip install sklearn
+```
+
+#### Julia
+Julia REPL에서 아래와 같이 입력합니다.
+```{{Julia}}
+using Pkg
+
+Pkg.add("DataFrames")
+```
+
+또는 `]`을 눌러 Pkg 모드로 들어간 다음 
+```{{bash}}
+add DataFrames
+```
+라고 쳐도 가능합니다.
+
+#### R
+
+R 콘솔에서 아래와 같이 입력합니다.
+
+```{{r}}
+install.packages("tidyverse")
+```
+:::
+
+### 데이터셋 불러오기
+
+데이터셋은 여기 저기 많이 공개되어 있는데 Rdataset을 연습용으로 많이 사용합니다.
+해당 데이터를 불러와 보도록 하겠습니다.
+
+::: {.panel-tabset}
+
+
+#### Python 
+
+```{python}
+import pandas as pd
+
+# pd.read_csv()
+```
+
+#### Julia
+
+```{julia}
+using Pkg
+```
+
+#### R
+
+```{r}
+iris
+```
+:::
+## 
