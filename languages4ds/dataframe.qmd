@@ -62,19 +62,29 @@ install.packages("tidyverse")
 ```{python}
 import pandas as pd
 
-# pd.read_csv()
+data_url = "https://rawcdn.githack.com/JunDamin/languages4ds/bab36dd0fd3b7f3e0fc0e710947113a625b88405/datasets/Korean_demographics_2000-2022.csv"
+data = pd.read_csv(data_url)
 ```
 
 #### Julia
 
 ```{julia}
-using Pkg
+using DataFrames, CSV
+
+data_url = "https://rawcdn.githack.com/JunDamin/languages4ds/bab36dd0fd3b7f3e0fc0e710947113a625b88405/datasets/Korean_demographics_2000-2022.csv"
+data = DataFrame(CSV.File(download(data_url)))
 ```
 
 #### R
 
 ```{r}
-iris
+data_url <- "https://rawcdn.githack.com/JunDamin/languages4ds/bab36dd0fd3b7f3e0fc0e710947113a625b88405/datasets/Korean_demographics_2000-2022.csv"
+
+data = read.csv(data_url)
+
 ```
 :::
-## 
+
+### 데이터 살펴보기
+
+### 
