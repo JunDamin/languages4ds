@@ -87,4 +87,70 @@ data = read.csv(data_url)
 
 ### 데이터 살펴보기
 
-### 
+
+::: {.panel-tabset}
+
+#### Python
+
+```{python}
+data.info()
+```
+
+
+```{python}
+data.describe()
+```
+
+```{python}
+corr = data.corr()
+corr.loc[corr.index.str.contains("rate"), corr.columns.str.contains("rate")]
+```
+:::
+
+### 데이터 선택하기
+
+값 바꾸기
+
+주소를 선택 vs. 값을 선택
+::: {.panel-tabset}
+
+#### Python
+
+```{python}
+data["Date"] = data["Date"].astype("datetime64")
+data.loc[data["Date"].between("2000-01-01", "2010-01-01"),]
+data.iloc[]
+data.query("Date < 20100101 & Date > 20000101")
+data.dropna()
+```
+
+:::
+
+
+
+### 데이터 변형하기
+
+::: {.panel-tabset}
+
+#### Python
+
+```{python}
+data.transform()
+```
+
+:::
+
+
+### 데이터 요약하기
+
+```{python}
+data.agg()
+data.aggregate()
+```
+
+
+### split-apply-combine
+
+```{python}
+data.groupby()
+```
