@@ -109,13 +109,13 @@ corr.loc[corr.index.str.contains("rate"), corr.columns.str.contains("rate")]
 
 ### 데이터 선택하기
 
-값 바꾸기
 
 주소를 선택 vs. 값을 선택
 ::: {.panel-tabset}
 
 #### Python
 
+파이썬에서 선택하는 방법
 ```{python}
 data["Date"] = data["Date"].astype("datetime64")
 data.loc[data["Date"].between("2000-01-01", "2010-01-01"),]
@@ -126,7 +126,17 @@ data.dropna()
 
 :::
 
+파이썬에서 값을 바꾸는 방법은 주소에 값을 할당하는 방식으로 가능합니다.
 
+컬럼을 바꾸는 방법
+
+```{python}
+data.rename({1:3, 3:1})
+```
+
+```{python}
+data.rename({"Date": "날자"}, axis=1)
+```
 
 ### 데이터 변형하기
 
