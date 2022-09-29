@@ -115,24 +115,43 @@ corr.loc[corr.index.str.contains("rate"), corr.columns.str.contains("rate")]
 
 #### Python
 
-파이썬에서 선택하는 방법
+파이썬에서 데이터를 선택하는 방법은 `loc` 또는 `iloc`을 선택해서 개별 항목을 선택할 수 있습니다.
+
+선택할 때 특정 항목의 이름을 넣을 수도 있지만, 같은 길이의 `True`와 `False`의 리스트 등으로도 선택할 수 있습니다.
+
 ```{python}
 data["Date"] = data["Date"].astype("datetime64")
 data.loc[data["Date"].between("2000-01-01", "2010-01-01"),]
 data.iloc[]
+```
+
+판다스에서는 `query` 메소드를 사용해서 여러 조건을 만족하는 행만을 선택할 수 있습니다.
+
+```{python}
 data.query("Date < 20100101 & Date > 20000101")
+```
+
+많이 처리하는 것중 하나는 결측값을 제외 하는 것입니다.
+```{python}
 data.dropna()
 ```
 
+결측값을 제외하는 방법으로 특정 열만을 보도록 할 수도 있습니다.
+
+```{python}
+data.dropna(subset=["date"])
+```
 :::
 
 파이썬에서 값을 바꾸는 방법은 주소에 값을 할당하는 방식으로 가능합니다.
 
-컬럼을 바꾸는 방법
+인덱스를 아래와 같이 바꿀 수 있습니다.
 
 ```{python}
 data.rename({1:3, 3:1})
 ```
+
+`axis`를 지정해서 컬럼도 인덱스와 동일한 방법으로 바꿀 수 있습니다.
 
 ```{python}
 data.rename({"Date": "날자"}, axis=1)
