@@ -157,6 +157,26 @@ index_series = data["Region"] == "Seoul"
 column_series = data.columns == "Date"
 data.loc[index_series, column_series]
 ```
+
+#### Julia
+
+줄리아 데이터프레임에는 메크로라는 것이 있습니다.
+
+줄리아는 파이프 연산을 할 수 있습니다.
+
+```{julia}
+
+data
+select(data, :Date)
+
+data[:, 1:2]
+data[!, ["Date", "Region"]]
+
+data |> (df) -> select(df, :Date)
+
+
+```
+
 :::
 
 
