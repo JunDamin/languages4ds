@@ -2,8 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/lineplot_following_economist_visual_guide/index.html",
       "/posts/post-with-code/index.html",
-      "/posts/test.html",
       "/posts/welcome/index.html"
     ]
   }
