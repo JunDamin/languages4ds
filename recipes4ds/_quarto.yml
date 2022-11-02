@@ -2,7 +2,7 @@ project:
   type: book
 
 book:
-  title: "languages4ds"
+  title: "Recipes for Data Science"
   author: "전다민"
   date: "9/16/2022"
   chapters:
