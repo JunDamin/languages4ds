@@ -1,6 +1,8 @@
 [
   {
     "listing": "/index.html",
-    "items": []
+    "items": [
+      "/posts/lineplot_following_economist_visual_guide/index.html"
+    ]
   }
 ]
