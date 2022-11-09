@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.245">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2022-08-22">
+
+<title>Practical Recipes for Data Science - Jax를 사용해서 Regression을 그려 봅시다</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/siamese-cat.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 20,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark ">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Practical Recipes for Data Science</span>
+    </a>
+  </div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html">About</a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/"><i class="bi bi-github" role="img">
+</i> 
+ </a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://twitter.com"><i class="bi bi-twitter" role="img">
+</i> 
+ </a>
+  </li>  
+</ul>
+              <div id="quarto-search" class="" title="Search"></div>
+          </div> <!-- /navcollapse -->
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">Jax를 사용해서 Regression을 그려 봅시다</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">jax</div>
+                <div class="quarto-category">regression</div>
+                <div class="quarto-category">tutorial</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">August 22, 2022</p>
+      </div>
+    </div>
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+<section id="설치하기" class="level3">
+<h3 class="anchored" data-anchor-id="설치하기">설치하기</h3>
+<p>JAX를 설치해 봅시다. 설치를 할 때 먼저 jaxlib을 설치하고 그 버전에 맞는 jax를 설치합니다. 순서가 바뀐 경우 잘 안되는 문제가 발생하곤 했습니다.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install jaxlib</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install jax==0.3.15</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="필요한-패키지를-불러옵니다" class="level3">
+<h3 class="anchored" data-anchor-id="필요한-패키지를-불러옵니다">필요한 패키지를 불러옵니다</h3>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax <span class="im">import</span> numpy <span class="im">as</span> jnp</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax <span class="im">import</span> grad</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>간단한 모형을 만들어 봅니다. X와 y가 2차함수 형태로 결합된 경우를 생각해 봅니다.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="dv">100</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.random.uniform(<span class="dv">0</span>, <span class="dv">3</span>, size<span class="op">=</span>n)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="dv">3</span> <span class="op">*</span> np.power(X, <span class="dv">2</span>) <span class="op">+</span> np.random.normal(<span class="dv">10</span>, <span class="dv">3</span>, size<span class="op">=</span>n)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.DataFrame(<span class="bu">zip</span>(X, y), columns<span class="op">=</span>[<span class="st">"X"</span>, <span class="st">"y"</span>])</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    ggplot(data)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> aes(<span class="st">"X"</span>, <span class="st">"y"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">+</span> geom_point()</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>&lt;ggplot: (8765458345283)&gt;</code></pre>
+</div>
+</div>
+<p>선형 모델을 먼저 생각해 봅니다.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>w <span class="op">=</span> {<span class="st">"a"</span>: <span class="fl">0.</span>, <span class="st">"b"</span>: <span class="fl">0.</span>}</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># set model</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> model(w, X):</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> w[<span class="st">"a"</span>] <span class="op">*</span> X <span class="op">+</span> w[<span class="st">"b"</span>]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># set loss</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss(w, model, X, y):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.power(model(w, X) <span class="op">-</span> y, <span class="dv">2</span>).<span class="bu">sum</span>()</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># grad loss</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>dloss <span class="op">=</span> grad(loss)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>이제 경사하강법을 활용하여 w를 찾아봅니다.</p>
+<p>경사하강법은 말그대로 경사를 구해서 낮은 쪽으로 이동하게 하는 것입니다.</p>
+<p>기본적인 아이디어는 예측치와 관측값의 차이를 합치는 손실함수(loss function)을 구합니다. 그리고 파라미터를 손실이 줄어드는 방향(경사, 미분해서 보통 구합니다)으로 조금씩 옮겨가면서 최적의 값을 찾아 한발 한발 나아가는 방식입니다.</p>
+<p>수식으로 간단하게 표기해보자면</p>
+<p>로 정의하고 이 을 로 미분해 해당 미분값(경사)를 이용해서 낮추는 방향으로 파라미터 를 바꿔가면서 찾아가는 방식입니다.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> <span class="fl">0.0001</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>losses <span class="op">=</span> []</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>ws <span class="op">=</span> []</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> tqdm(<span class="bu">range</span>(<span class="dv">2000</span>)):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    l <span class="op">=</span> loss(w, model, X, y)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    ws.append(w.copy())</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    losses.append(l)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    dw <span class="op">=</span> dloss(w, model, X, y)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> key <span class="kw">in</span> w.keys():</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        w[key] <span class="op">-=</span> dw[key]<span class="op">*</span>rate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  0%|          | 0/2000 [00:00&lt;?, ?it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  1%|          | 23/2000 [00:00&lt;00:08, 227.81it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  2%|▏         | 49/2000 [00:00&lt;00:08, 241.85it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  4%|▎         | 74/2000 [00:00&lt;00:07, 245.18it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  5%|▍         | 99/2000 [00:00&lt;00:07, 242.35it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  6%|▋         | 125/2000 [00:00&lt;00:07, 247.72it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  8%|▊         | 151/2000 [00:00&lt;00:07, 251.55it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>  9%|▉         | 177/2000 [00:00&lt;00:07, 242.55it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 10%|█         | 202/2000 [00:00&lt;00:07, 228.65it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 11%|█▏        | 228/2000 [00:00&lt;00:07, 236.54it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 13%|█▎        | 253/2000 [00:01&lt;00:07, 240.14it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 14%|█▍        | 279/2000 [00:01&lt;00:07, 245.16it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 15%|█▌        | 305/2000 [00:01&lt;00:06, 249.27it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 17%|█▋        | 331/2000 [00:01&lt;00:06, 249.87it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 18%|█▊        | 357/2000 [00:01&lt;00:06, 250.01it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 19%|█▉        | 383/2000 [00:01&lt;00:06, 251.82it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 20%|██        | 410/2000 [00:01&lt;00:06, 255.25it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 22%|██▏       | 437/2000 [00:01&lt;00:06, 257.79it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 23%|██▎       | 464/2000 [00:01&lt;00:05, 258.90it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 24%|██▍       | 490/2000 [00:01&lt;00:05, 255.47it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 26%|██▌       | 517/2000 [00:02&lt;00:05, 257.80it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 27%|██▋       | 544/2000 [00:02&lt;00:05, 258.93it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 29%|██▊       | 571/2000 [00:02&lt;00:05, 259.97it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 30%|██▉       | 598/2000 [00:02&lt;00:05, 260.34it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 31%|███▏      | 625/2000 [00:02&lt;00:05, 258.61it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 33%|███▎      | 652/2000 [00:02&lt;00:05, 259.38it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 34%|███▍      | 678/2000 [00:02&lt;00:05, 259.33it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 35%|███▌      | 704/2000 [00:02&lt;00:04, 259.22it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 36%|███▋      | 730/2000 [00:02&lt;00:05, 247.30it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 38%|███▊      | 757/2000 [00:03&lt;00:04, 251.44it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 39%|███▉      | 783/2000 [00:03&lt;00:04, 252.11it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 40%|████      | 809/2000 [00:03&lt;00:04, 254.02it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 42%|████▏     | 836/2000 [00:03&lt;00:04, 256.57it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 43%|████▎     | 862/2000 [00:03&lt;00:04, 256.28it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 44%|████▍     | 888/2000 [00:03&lt;00:04, 254.10it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 46%|████▌     | 915/2000 [00:03&lt;00:04, 257.02it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 47%|████▋     | 942/2000 [00:03&lt;00:04, 258.06it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 48%|████▊     | 969/2000 [00:03&lt;00:03, 259.07it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 50%|████▉     | 995/2000 [00:03&lt;00:03, 259.22it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 51%|█████     | 1022/2000 [00:04&lt;00:03, 259.40it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 52%|█████▏    | 1048/2000 [00:04&lt;00:03, 259.42it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 54%|█████▍    | 1075/2000 [00:04&lt;00:03, 259.72it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 55%|█████▌    | 1101/2000 [00:04&lt;00:03, 248.99it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 56%|█████▋    | 1126/2000 [00:04&lt;00:03, 227.51it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 57%|█████▊    | 1150/2000 [00:04&lt;00:04, 211.19it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 59%|█████▊    | 1172/2000 [00:04&lt;00:04, 172.80it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 60%|█████▉    | 1191/2000 [00:04&lt;00:04, 175.12it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 60%|██████    | 1210/2000 [00:05&lt;00:04, 171.60it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 61%|██████▏   | 1228/2000 [00:05&lt;00:04, 172.98it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 63%|██████▎   | 1255/2000 [00:05&lt;00:03, 197.54it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 64%|██████▍   | 1276/2000 [00:05&lt;00:03, 199.78it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 65%|██████▍   | 1297/2000 [00:05&lt;00:03, 201.84it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 66%|██████▌   | 1321/2000 [00:05&lt;00:03, 211.93it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 67%|██████▋   | 1345/2000 [00:05&lt;00:02, 219.14it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 68%|██████▊   | 1368/2000 [00:05&lt;00:03, 209.53it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 70%|██████▉   | 1390/2000 [00:05&lt;00:02, 203.44it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 71%|███████   | 1411/2000 [00:06&lt;00:04, 142.52it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 72%|███████▏  | 1430/2000 [00:06&lt;00:03, 151.15it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 72%|███████▏  | 1448/2000 [00:06&lt;00:03, 157.22it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 74%|███████▎  | 1473/2000 [00:06&lt;00:02, 180.31it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 75%|███████▍  | 1499/2000 [00:06&lt;00:02, 199.49it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 76%|███████▋  | 1526/2000 [00:06&lt;00:02, 216.81it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 78%|███████▊  | 1553/2000 [00:06&lt;00:01, 229.37it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 79%|███████▉  | 1580/2000 [00:06&lt;00:01, 238.71it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 80%|████████  | 1605/2000 [00:06&lt;00:01, 239.93it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 82%|████████▏ | 1630/2000 [00:07&lt;00:01, 235.01it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 83%|████████▎ | 1656/2000 [00:07&lt;00:01, 240.78it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 84%|████████▍ | 1682/2000 [00:07&lt;00:01, 244.11it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 85%|████████▌ | 1708/2000 [00:07&lt;00:01, 248.07it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 87%|████████▋ | 1734/2000 [00:07&lt;00:01, 250.94it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 88%|████████▊ | 1761/2000 [00:07&lt;00:00, 254.19it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 89%|████████▉ | 1788/2000 [00:07&lt;00:00, 257.02it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 91%|█████████ | 1815/2000 [00:07&lt;00:00, 258.42it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 92%|█████████▏| 1842/2000 [00:07&lt;00:00, 259.50it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 93%|█████████▎| 1869/2000 [00:08&lt;00:00, 260.59it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 95%|█████████▍| 1896/2000 [00:08&lt;00:00, 261.41it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 96%|█████████▌| 1923/2000 [00:08&lt;00:00, 262.03it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 98%|█████████▊| 1950/2000 [00:08&lt;00:00, 262.43it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code> 99%|█████████▉| 1977/2000 [00:08&lt;00:00, 262.49it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>100%|██████████| 2000/2000 [00:08&lt;00:00, 235.18it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code></code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># overlay plots</span></span>
+<span id="cb88-2"><a href="#cb88-2" aria-hidden="true" tabindex="-1"></a>result_df <span class="op">=</span> pd.DataFrame(<span class="bu">zip</span>(X, np.array(model(w, X))), columns<span class="op">=</span>[<span class="st">"X"</span>, <span class="st">"f"</span>])</span>
+<span id="cb88-3"><a href="#cb88-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb88-4"><a href="#cb88-4" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>data) <span class="op">+</span></span>
+<span id="cb88-5"><a href="#cb88-5" aria-hidden="true" tabindex="-1"></a>    aes(<span class="st">"X"</span>, <span class="st">"y"</span>) <span class="op">+</span></span>
+<span id="cb88-6"><a href="#cb88-6" aria-hidden="true" tabindex="-1"></a>    geom_point() <span class="op">+</span></span>
+<span id="cb88-7"><a href="#cb88-7" aria-hidden="true" tabindex="-1"></a>    geom_smooth(method<span class="op">=</span><span class="st">"lm"</span>) <span class="op">+</span></span>
+<span id="cb88-8"><a href="#cb88-8" aria-hidden="true" tabindex="-1"></a>    geom_line(data<span class="op">=</span>result_df, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"f"</span>),  color<span class="op">=</span><span class="st">"#ff1234"</span>)</span>
+<span id="cb88-9"><a href="#cb88-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb88-10"><a href="#cb88-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>&lt;ggplot: (8765489684197)&gt;</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="op">=</span> [pd.DataFrame(<span class="bu">zip</span>(<span class="bu">map</span>(<span class="bu">int</span>, np.ones_like(X)<span class="op">*</span>i), X, np.array(model(ws[i], X))), columns<span class="op">=</span>[<span class="st">"i"</span>, <span class="st">"X"</span>, <span class="st">"f"</span>]) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">5</span>)]</span>
+<span id="cb90-2"><a href="#cb90-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat(dfs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>처음에는 많이 차이나지만 점점 해석적으로 계산한 선형 회귀 값과 유사해지는 것을 볼 수 있습니다.</p>
+<p>이 경사하강법의 장점은 손실함수를 정의 할 수만 있다면 적용할 수 있어 유연하게 많은 곳에 적용할 수 있습니다.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>df) <span class="op">+</span></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>    aes(x<span class="op">=</span><span class="st">"X"</span>, y<span class="op">=</span><span class="st">"f"</span>) <span class="op">+</span></span>
+<span id="cb91-4"><a href="#cb91-4" aria-hidden="true" tabindex="-1"></a>    geom_point(data<span class="op">=</span>data, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>)) <span class="op">+</span></span>
+<span id="cb91-5"><a href="#cb91-5" aria-hidden="true" tabindex="-1"></a>    geom_smooth(data<span class="op">=</span>data, method<span class="op">=</span><span class="st">"lm"</span>, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>), color<span class="op">=</span><span class="st">"yellow"</span>) <span class="op">+</span></span>
+<span id="cb91-6"><a href="#cb91-6" aria-hidden="true" tabindex="-1"></a>    geom_line(color<span class="op">=</span><span class="st">"red"</span>, size<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb91-7"><a href="#cb91-7" aria-hidden="true" tabindex="-1"></a>    facet_wrap(<span class="st">"i"</span>)</span>
+<span id="cb91-8"><a href="#cb91-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb91-9"><a href="#cb91-9" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>&lt;ggplot: (8765486796228)&gt;</code></pre>
+</div>
+</div>
+<p>하나의 그래프에 겹쳐서 표현하면 아래와 같은 그래프가 됩니다.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (ggplot() <span class="op">+</span></span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>    geom_point(data<span class="op">=</span>data, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>)) <span class="op">+</span></span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>    geom_smooth(data<span class="op">=</span>data, method<span class="op">=</span><span class="st">"lm"</span>, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>), color<span class="op">=</span><span class="st">"yellow"</span>)</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> df <span class="kw">in</span> dfs:</span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a>    p <span class="op">+=</span> geom_line(data<span class="op">=</span>df, mapping<span class="op">=</span>aes(x<span class="op">=</span><span class="st">"X"</span>, y<span class="op">=</span><span class="st">"f"</span>, color<span class="op">=</span><span class="st">"i"</span>))</span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="index_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>&lt;ggplot: (8765489503242)&gt;</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
