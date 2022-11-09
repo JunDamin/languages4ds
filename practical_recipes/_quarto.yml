@@ -3,6 +3,7 @@ project:
 
 website:
   title: "Practical Recipes for Data Science"
+  favicon: images/siamese-cat.png
   navbar:
     right:
       - about.qmd
@@ -12,8 +13,7 @@ website:
         href: https://twitter.com
 format:
   html:
-    theme: cosmo
+    theme: lux
     css: styles.css
-
 
 
