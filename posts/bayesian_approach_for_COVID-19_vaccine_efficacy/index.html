@@ -287,8 +287,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section>
 <section id="모델링-양성-환자가-백신을-맞은-그룹에-속한-확률-p" class="level3">
 <h3 class="anchored" data-anchor-id="모델링-양성-환자가-백신을-맞은-그룹에-속한-확률-p">모델링: 양성 환자가 백신을 맞은 그룹에 속한 확률 p</h3>
-<p>양성 환자가 백신을 맞은 그룹에 속할 확률을 p라고 하자. 그렇게 p를 정했다고 가정하면 우리는 그 p값 하에서 우리가 가진 양성환자 데이터가 나올 확률(likelihood)를 계산할 수 있습니다.</p>
-<p>백신에 대해서는 아는 것이 없기도 하고 모든 값이 가능하다고 생각하기 때문에 0과 1사이에 편향이 없는(uniform) 분포와 동일한 Beta(1, 1) 분포를 사전분포(prior distribution)으로 가정했습니다.</p>
+<p>양성 환자가 백신을 맞은 그룹에 속할 확률을 p라고 하자. 그렇게 p를 정했다고 가정하면 우리는 그 p값 하에서 우리가 가진 양성환자 데이터가 나올 확률(likelihood)를 계산할 수 있습니다. 백신에 대해서는 아는 것이 없기도 하고 모든 값이 가능하다고 생각하기 때문에 0과 1사이에 편향이 없는(uniform) 분포와 동일한 Beta(1, 1) 분포를 사전분포(prior distribution)으로 가정했습니다.</p>
 <div class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> pm.Model() <span class="im">as</span> model:</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    rate <span class="op">=</span> pm.Beta(<span class="st">"P(treatment | positive)"</span>, alpha<span class="op">=</span><span class="dv">1</span>, beta<span class="op">=</span><span class="dv">1</span>)  <span class="co"># p의 분포</span></span>
@@ -301,9 +300,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 <p>위 그래프를 조금 해석해 보려고 합니다.</p>
-<p>P(treatment | positive)는 양성일 때 treatment 그룹에 속할 확률입니다.</p>
-<p>likelihood가 회색인 이유는 P(treatment | positive)의 값이 정해졌을 때 데이터가 확인될 확률을 베르누이 분포로 구한 것이기 때문입니다.</p>
-<p>즉 아래 수식의 값을 구하는 것입니다. 여기서는 170명 중 8명이 백신 맞은 집단이기 때문에 아래와 같은 수식이 되는데요. p는 위에서 언급한 P(treatment | positive)와 같습니다. <span class="math display">\[likelihood = p^{8}(1-p)^{162} \]</span></p>
+<p><span class="math inline">\(P(treatment | positive)\)</span>는 양성일 때 treatment 그룹에 속할 확률입니다. likelihood가 회색인 이유는 <span class="math inline">\(P(treatment | positive)\)</span>의 값이 정해졌을 때 데이터가 확인될 확률을 베르누이 분포로 구한 것이기 때문입니다.</p>
+<p>즉 아래 수식의 값을 구하는 것입니다. 여기서는 170명 중 8명이 백신 맞은 집단이기 때문에 아래와 같은 수식이 되는데요. p는 위에서 언급한 <span class="math inline">\(P(treatment | positive)\)</span>와 같습니다. <span class="math display">\[likelihood = p^{8}(1-p)^{162} \]</span></p>
 <p>이렇게 0과 1사이에 있는 p의 분포를 구할 수 있게 됩니다. 사전분포(Prior distribution)과 우도(likelihood)를 구할 수 있으면 우리는 베이즈 정리를 통해 사후분포(posterior distribution)를 얻을 수 잇게 됩니다. 그 p의 사후분포를 통해서 efficacy를 구하게 되는 것입니다.</p>
 <p>이제 이를 계산하는 여러가지 방법이 있겠지만, 계산의 현실성 문제 등으로 인해서 MCMC(Markov Chain Monte Carlo) 방법으로 계산을 해보겠습니다.</p>
 <p>사후분포를 구하기 위해서는 아래와 같은 코드를 실행 시키면 됩니다.</p>
@@ -340,14 +338,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
     </div>
     
 </div>
-<div class="cell-output cell-output-stdout">
-<pre><code></code></pre>
-</div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Multiprocess sampling (2 chains in 2 jobs)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>HamiltonianMC: [P(treatment | positive)]</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code></code></pre>
 </div>
 <div class="cell-output cell-output-display">
 
@@ -371,7 +369,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
     <div>
       <progress value="12000" class="" max="12000" style="width:300px; height:20px; vertical-align: middle;"></progress>
-      100.00% [12000/12000 00:02&lt;00:00 Sampling 2 chains, 0 divergences]
+      100.00% [12000/12000 00:03&lt;00:00 Sampling 2 chains, 0 divergences]
     </div>
     
 </div>
@@ -552,7 +550,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>sns.distplot(trace[<span class="st">'AstraZeneca 2 vaccine efficacy'</span>], hist<span class="op">=</span><span class="va">False</span>, label<span class="op">=</span><span class="st">'AstraZeneca regimen 2'</span>)</span>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Posterior distributions of efficacy of different vaccines"</span>)</span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>plt.show()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>plt.savefig(<span class="st">"efficacy.png"</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>plt.show()<span class="op">;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="index_files/figure-html/cell-12-output-1.png" width="772" height="693"></p>
 </div>
@@ -564,20 +563,18 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    pm.forestplot(trace, var_names<span class="op">=</span>efficacy_names)<span class="op">;</span></span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="index_files/figure-html/cell-13-output-1.png" width="820" height="673"></p>
+<p><img src="index_files/figure-html/cell-13-output-1.png" width="823" height="673"></p>
 </div>
 </div>
 </section>
 <section id="불확실성의-해석" class="level3">
 <h3 class="anchored" data-anchor-id="불확실성의-해석">불확실성의 해석</h3>
-<p>그래서 AstraZeneca 1의 백신의 평균만 보면 moderna와 비슷한 효능을 보이는 것 같지만, 불확실성이 훨씬 크기에 Moderna 만큼 좋은가에 대해서는 추가적인 조사가 필요한 것으로 보입니다.</p>
-<p>한가지 참고할 만한 부분은 이유는 모르겠지만 AstraZeneca 1방법으로 백신을 놓고 있지는 않는 것으로 알려져 있으며 아마도 당초 설계와 다르기 때문에 그런 것으로 판단됩니다.</p>
+<p>그래서 AstraZeneca 1의 백신의 평균만 보면 moderna와 비슷한 효능을 보이는 것 같지만, 불확실성이 훨씬 크기에 Moderna 만큼 좋은가에 대해서는 추가적인 조사가 필요한 것으로 보입니다. 한가지 참고할 만한 부분은 이유는 모르겠지만 AstraZeneca 1방법으로 백신을 놓고 있지는 않는 것으로 알려져 있으며 아마도 당초 설계와 다르기 때문에 그런 것으로 판단됩니다.</p>
 </section>
 </section>
 <section id="백신간의-비교는-어떻게-할까" class="level2">
 <h2 class="anchored" data-anchor-id="백신간의-비교는-어떻게-할까">백신간의 비교는 어떻게 할까?</h2>
-<p>위에서 진행한 방식을 조금 응용하면 백신 간 예방효과의 우월성을 비교할 수 있습니다.</p>
-<p>간단하게 설명하자면 위에서 구하는 efficacy 분포를 서로 빼 보면 됩니다.</p>
+<p>위에서 진행한 방식을 조금 응용하면 백신 간 예방효과의 우월성을 비교할 수 있습니다. 간단하게 설명하자면 위에서 구하는 efficacy 분포를 서로 빼 보면 됩니다.</p>
 <section id="pfizer-vs.-moderna" class="level3">
 <h3 class="anchored" data-anchor-id="pfizer-vs.-moderna">Pfizer vs.&nbsp;Moderna</h3>
 <p>Pfizer와 Moderna 백신을 비교해보자. 자료는 위에서 사용했던 것을 그대로 사용하고 거의 모든 것은 동일 하지만 마지막에 difference와 ralation을 구해봅니다.</p>
@@ -660,7 +657,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
     <div>
       <progress value="12000" class="" max="12000" style="width:300px; height:20px; vertical-align: middle;"></progress>
-      100.00% [12000/12000 00:02&lt;00:00 Sampling 2 chains, 0 divergences]
+      100.00% [12000/12000 00:03&lt;00:00 Sampling 2 chains, 0 divergences]
     </div>
     
 </div>
@@ -677,7 +674,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> pm.plot_posterior(trace_1, var_names<span class="op">=</span>[<span class="st">'difference'</span>, <span class="st">'relation'</span>], ref_val<span class="op">=</span><span class="dv">0</span>)<span class="op">;</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="index_files/figure-html/cell-15-output-1.png" width="1372" height="518"></p>
+<p><img src="index_files/figure-html/cell-15-output-1.png" width="1375" height="518"></p>
 </div>
 </div>
 <p>이를 간단히 해석하자면 Pfizer백신이 Moderna백신보다 약간 더 나아 보이기는 합니다.(차이의 평균이 1.1%정도로 Pfizer가 높다고 해석할 수 있다.) 다만, 그 불확실성이 커서 실제로 나은 것인지 아니면 우연히 나은 것인지 판단하기는 어려운 상황입니다.</p>
@@ -685,7 +682,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>diffs_1 <span class="op">=</span> trace_1.get_values(<span class="st">'difference'</span>, burn<span class="op">=</span><span class="dv">1000</span>)</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Pfizer가 Moderna보다 나을 확률: </span><span class="sc">{</span><span class="dv">100</span><span class="op">*</span><span class="bu">len</span>(diffs_1[diffs_1<span class="op">&gt;</span><span class="dv">0</span>])<span class="op">*</span><span class="fl">1.0</span><span class="op">/</span><span class="bu">len</span>(diffs_1)<span class="sc">:.2f}</span><span class="ss">% "</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Pfizer가 Moderna보다 나을 확률: 62.36% </code></pre>
+<pre><code>Pfizer가 Moderna보다 나을 확률: 62.71% </code></pre>
 </div>
 </div>
 </section>
@@ -771,36 +768,34 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
     <div>
       <progress value="102000" class="" max="102000" style="width:300px; height:20px; vertical-align: middle;"></progress>
-      100.00% [102000/102000 00:24&lt;00:00 Sampling 2 chains, 0 divergences]
+      100.00% [102000/102000 00:22&lt;00:00 Sampling 2 chains, 0 divergences]
     </div>
     
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>Sampling 2 chains for 1_000 tune and 50_000 draw iterations (2_000 + 100_000 draws total) took 25 seconds.</code></pre>
+<pre><code>Sampling 2 chains for 1_000 tune and 50_000 draw iterations (2_000 + 100_000 draws total) took 23 seconds.</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code>The number of effective samples is smaller than 25% for some parameters.</code></pre>
 </div>
 </div>
-<p>결과를 시각화 하면 아래와 같다.</p>
-<p>보면 알겠지만, 차이가 0보다 클 확률이 상당히 높은 것을 직관적으로 볼 수 있습니다.</p>
+<p>결과를 시각화 하면 아래와 같다. 보면 알겠지만, 차이가 0보다 클 확률이 상당히 높은 것을 직관적으로 볼 수 있습니다.</p>
 <div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> model_2:</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    _ <span class="op">=</span> pm.plot_posterior(trace_2, var_names<span class="op">=</span>[<span class="st">'difference'</span>, <span class="st">'relation'</span>], ref_val<span class="op">=</span><span class="dv">0</span>)<span class="op">;</span></span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
-<p><img src="index_files/figure-html/cell-18-output-1.png" width="1379" height="518"></p>
+<p><img src="index_files/figure-html/cell-18-output-1.png" width="1364" height="518"></p>
 </div>
 </div>
-<p>용법 1이 용법 2보다 나을 확률이 높음을 알 수 있으며 계산해보면 99%이상 용법 1이 낫다고 볼 수 있습니다.</p>
-<p>6%이상 나을 확률도 97% 수준으로 용법 1이 용법 2보다 훨씬 났다고 볼 수 있습니다.</p>
+<p>용법 1이 용법 2보다 나을 확률이 높음을 알 수 있으며 계산해보면 99%이상 용법 1이 낫다고 볼 수 있습니다. 6%이상 나을 확률도 97% 수준으로 용법 1이 용법 2보다 훨씬 났다고 볼 수 있습니다.</p>
 <div class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>diffs_2 <span class="op">=</span> trace_2.get_values(<span class="st">'difference'</span>, burn<span class="op">=</span><span class="dv">1000</span>)</span>
 <span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Regime1이 Regime2보다 나을 확률: </span><span class="sc">{</span><span class="dv">100</span><span class="op">*</span><span class="bu">len</span>(diffs_2[diffs_2<span class="op">&gt;</span><span class="dv">0</span>])<span class="op">*</span><span class="fl">1.0</span><span class="op">/</span><span class="bu">len</span>(diffs_2)<span class="sc">:.2f}</span><span class="ss">%"</span>)</span>
 <span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Regime1이 Regime2보다 6%이상 나을 확률: </span><span class="sc">{</span><span class="dv">100</span><span class="op">*</span><span class="bu">len</span>(diffs_2[diffs_2<span class="op">&gt;</span><span class="fl">0.06</span>])<span class="op">*</span><span class="fl">1.0</span><span class="op">/</span><span class="bu">len</span>(diffs_2)<span class="sc">:.2f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Regime1이 Regime2보다 나을 확률: 99.30%
-Regime1이 Regime2보다 6%이상 나을 확률: 97.77%</code></pre>
+<pre><code>Regime1이 Regime2보다 나을 확률: 99.24%
+Regime1이 Regime2보다 6%이상 나을 확률: 97.69%</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="19">

@@ -124,6 +124,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   }
 }</script>
 
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 <link rel="stylesheet" href="../../styles.css">
 </head>
@@ -233,7 +234,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p><img src="index_files/figure-html/cell-3-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="2">
-<pre><code>&lt;ggplot: (8758889584538)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8785277175537)&gt;</code></pre>
 </div>
 </div>
 <p>선형 모델을 먼저 생각해 봅니다.</p>
@@ -254,8 +255,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>이제 경사하강법을 활용하여 w를 찾아봅니다.</p>
 <p>경사하강법은 말그대로 경사를 구해서 낮은 쪽으로 이동하게 하는 것입니다.</p>
 <p>기본적인 아이디어는 예측치와 관측값의 차이를 합치는 손실함수(loss function)을 구합니다. 그리고 파라미터를 손실이 줄어드는 방향(경사, 미분해서 보통 구합니다)으로 조금씩 옮겨가면서 최적의 값을 찾아 한발 한발 나아가는 방식입니다.</p>
-<p>수식으로 간단하게 표기해보자면</p>
-<p>로 정의하고 이 을 로 미분해 해당 미분값(경사)를 이용해서 낮추는 방향으로 파라미터 를 바꿔가면서 찾아가는 방식입니다.</p>
+<p>수식으로 간단하게 표기해보자면 <span class="math display">\[Loss = ￦sum_i f(w, data_i)\]</span> 로 정의하고 <span class="math inline">\(\sum_i f(w, data_i)\)</span>를 <span class="math inline">\(w\)</span>로 미분해서 해당 미분값(경사)를 이용해서 낮추는 방향으로 파라미터를 바꿔가면서 찾아가는 방식입니다.</p>
 <div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>rate <span class="op">=</span> <span class="fl">0.0001</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -267,7 +267,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    losses.append(l)</span>
 <span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    dw <span class="op">=</span> dloss(w, model, X, y)</span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> key <span class="kw">in</span> w.keys():</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        w[key] <span class="op">-=</span> dw[key]<span class="op">*</span>rate</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        w[key] <span class="op">-=</span> dw[key]<span class="op">*</span>rate </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>  0%|          | 0/100 [00:00&lt;?, ?it/s]</code></pre>
 </div>
@@ -275,85 +275,88 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <pre><code>WARNING:jax._src.lib.xla_bridge:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>  1%|          | 1/100 [00:00&lt;00:20,  4.84it/s]</code></pre>
+<pre><code>  1%|          | 1/100 [00:01&lt;02:19,  1.41s/it]</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code> 17%|█▋        | 17/100 [00:00&lt;00:01, 67.32it/s]</code></pre>
+<pre><code> 10%|█         | 10/100 [00:01&lt;00:10,  8.89it/s]</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code> 42%|████▏     | 42/100 [00:00&lt;00:00, 132.25it/s]</code></pre>
+<pre><code> 33%|███▎      | 33/100 [00:01&lt;00:01, 34.41it/s]</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code> 66%|██████▌   | 66/100 [00:00&lt;00:00, 167.38it/s]</code></pre>
+<pre><code> 52%|█████▏    | 52/100 [00:01&lt;00:00, 55.99it/s]</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code> 90%|█████████ | 90/100 [00:00&lt;00:00, 189.79it/s]</code></pre>
+<pre><code> 72%|███████▏  | 72/100 [00:01&lt;00:00, 79.65it/s]</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
-<pre><code>100%|██████████| 100/100 [00:00&lt;00:00, 151.72it/s]</code></pre>
+<pre><code> 97%|█████████▋| 97/100 [00:01&lt;00:00, 112.24it/s]</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>100%|██████████| 100/100 [00:01&lt;00:00, 51.56it/s]</code></pre>
 </div>
 <div class="cell-output cell-output-stderr">
 <pre><code></code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># overlay plots</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>result_df <span class="op">=</span> pd.DataFrame(<span class="bu">zip</span>(X, np.array(model(w, X))), columns<span class="op">=</span>[<span class="st">"X"</span>, <span class="st">"f"</span>])</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>data) <span class="op">+</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    aes(<span class="st">"X"</span>, <span class="st">"y"</span>) <span class="op">+</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    geom_point() <span class="op">+</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    geom_smooth(method<span class="op">=</span><span class="st">"lm"</span>) <span class="op">+</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    geom_line(data<span class="op">=</span>result_df, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"f"</span>),  color<span class="op">=</span><span class="st">"#ff1234"</span>)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># overlay plots</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>result_df <span class="op">=</span> pd.DataFrame(<span class="bu">zip</span>(X, np.array(model(w, X))), columns<span class="op">=</span>[<span class="st">"X"</span>, <span class="st">"f"</span>])</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>data) <span class="op">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    aes(<span class="st">"X"</span>, <span class="st">"y"</span>) <span class="op">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    geom_point() <span class="op">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    geom_smooth(method<span class="op">=</span><span class="st">"lm"</span>) <span class="op">+</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    geom_line(data<span class="op">=</span>result_df, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"f"</span>),  color<span class="op">=</span><span class="st">"#ff1234"</span>)</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="index_files/figure-html/cell-6-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="5">
-<pre><code>&lt;ggplot: (8758805328122)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8785277027825)&gt;</code></pre>
 </div>
 </div>
 <div class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="op">=</span> [pd.DataFrame(<span class="bu">zip</span>(<span class="bu">map</span>(<span class="bu">int</span>, np.ones_like(X)<span class="op">*</span>i), X, np.array(model(ws[i], X))), columns<span class="op">=</span>[<span class="st">"i"</span>, <span class="st">"X"</span>, <span class="st">"f"</span>]) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">5</span>)]</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat(dfs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>dfs <span class="op">=</span> [pd.DataFrame(<span class="bu">zip</span>(<span class="bu">map</span>(<span class="bu">int</span>, np.ones_like(X)<span class="op">*</span>i), X, np.array(model(ws[i], X))), columns<span class="op">=</span>[<span class="st">"i"</span>, <span class="st">"X"</span>, <span class="st">"f"</span>]) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="dv">50</span>, <span class="dv">5</span>)]</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.concat(dfs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>처음에는 많이 차이나지만 점점 해석적으로 계산한 선형 회귀 값과 유사해지는 것을 볼 수 있습니다.</p>
 <p>이 경사하강법의 장점은 손실함수를 정의 할 수만 있다면 적용할 수 있어 유연하게 많은 곳에 적용할 수 있습니다.</p>
 <div class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>df) <span class="op">+</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    aes(x<span class="op">=</span><span class="st">"X"</span>, y<span class="op">=</span><span class="st">"f"</span>) <span class="op">+</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    geom_point(data<span class="op">=</span>data, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>)) <span class="op">+</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    geom_smooth(data<span class="op">=</span>data, method<span class="op">=</span><span class="st">"lm"</span>, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>), color<span class="op">=</span><span class="st">"yellow"</span>) <span class="op">+</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    geom_line(color<span class="op">=</span><span class="st">"red"</span>, size<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    facet_wrap(<span class="st">"i"</span>)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    ggplot(data<span class="op">=</span>df) <span class="op">+</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    aes(x<span class="op">=</span><span class="st">"X"</span>, y<span class="op">=</span><span class="st">"f"</span>) <span class="op">+</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    geom_point(data<span class="op">=</span>data, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>)) <span class="op">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    geom_smooth(data<span class="op">=</span>data, method<span class="op">=</span><span class="st">"lm"</span>, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>), color<span class="op">=</span><span class="st">"yellow"</span>) <span class="op">+</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    geom_line(color<span class="op">=</span><span class="st">"red"</span>, size<span class="op">=</span><span class="dv">1</span>) <span class="op">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    facet_wrap(<span class="st">"i"</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="index_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>&lt;ggplot: (8758805329059)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8785276951784)&gt;</code></pre>
 </div>
 </div>
 <p>하나의 그래프에 겹쳐서 표현하면 아래와 같은 그래프가 됩니다.</p>
 <div class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (ggplot() <span class="op">+</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    geom_point(data<span class="op">=</span>data, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>)) <span class="op">+</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    geom_smooth(data<span class="op">=</span>data, method<span class="op">=</span><span class="st">"lm"</span>, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>), color<span class="op">=</span><span class="st">"yellow"</span>)</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> df <span class="kw">in</span> dfs:</span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    p <span class="op">+=</span> geom_line(data<span class="op">=</span>df, mapping<span class="op">=</span>aes(x<span class="op">=</span><span class="st">"X"</span>, y<span class="op">=</span><span class="st">"f"</span>, color<span class="op">=</span><span class="st">"i"</span>))</span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> (ggplot() <span class="op">+</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    geom_point(data<span class="op">=</span>data, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>)) <span class="op">+</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    geom_smooth(data<span class="op">=</span>data, method<span class="op">=</span><span class="st">"lm"</span>, mapping<span class="op">=</span>aes(<span class="st">"X"</span>, <span class="st">"y"</span>), color<span class="op">=</span><span class="st">"yellow"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> df <span class="kw">in</span> dfs:</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    p <span class="op">+=</span> geom_line(data<span class="op">=</span>df, mapping<span class="op">=</span>aes(x<span class="op">=</span><span class="st">"X"</span>, y<span class="op">=</span><span class="st">"f"</span>, color<span class="op">=</span><span class="st">"i"</span>))</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>p</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display">
 <p><img src="index_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
 </div>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>&lt;ggplot: (8758805495580)&gt;</code></pre>
+<pre><code>&lt;ggplot: (8785277181037)&gt;</code></pre>
 </div>
 </div>
 
