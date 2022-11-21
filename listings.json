@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/ppl_tutorial_using_julia/index.html",
       "/posts/lineplot_following_economist_visual_guide/index.html",
       "/posts/regression_using_jax/index.html",
       "/posts/how_to_install_python_package_under_offline_enviromnent/index.html",
