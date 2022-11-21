@@ -265,19 +265,12 @@ Infected --&gt; Recovered
 <p>줄리아는 Pkg 모듈을 사용해서 아래와 같이 필요한 패키지를 설치할 수 있습니다.</p>
 <p>줄리아 패키지 설치가 상당히 많은 시간이 소요될 수 있습니다.</p>
 <div class="cell" data-execution_count="1">
+<details>
+<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Pkg</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">Pkg</span>.<span class="fu">add</span>([<span class="st">"Turing"</span>, <span class="st">"LazyArrays"</span>, <span class="st">"Random"</span>, <span class="st">"DifferentialEquations"</span>, <span class="st">"Plots"</span>, <span class="st">"StatsPlots"</span>, <span class="st">"LaTeXStrings"</span>, <span class="st">"Downloads"</span>, <span class="st">"DataFrames"</span>, <span class="st">"CSV"</span>, <span class="st">"Chain"</span>, <span class="st">"Dates"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>    Updating registry at `~/.julia/registries/General.toml`</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>   Resolving package versions...</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>  No Changes to `~/.julia/environments/v1.8/Project.toml`
-  No Changes to `~/.julia/environments/v1.8/Manifest.toml`</code></pre>
-</div>
+</details>
 </div>
 </section>
 </section>
@@ -286,72 +279,81 @@ Infected --&gt; Recovered
 <p>줄리아는 위의 값을 아래와 같이 정리할 수 있습니다. du, u, p, t를 지정해야 합니다.</p>
 <p>여기서 p는 파라미터, t는 시간을 의미하며 u는 변수이며 du는 그 1차 미분을 의미합니다. 이것을 바탕으로 위의 수식을 최대한 비슷하게 작성할 수 있습니다.</p>
 <div class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DifferentialEquations</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">sir_ode!</span>(du, u, p, t)</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    (S, I, R) <span class="op">=</span> u</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    (β, γ) <span class="op">=</span> p</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> S <span class="op">+</span> I <span class="op">+</span> R    <span class="co"># N은 전체 인원입니다.</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    infection <span class="op">=</span> β <span class="op">*</span> I <span class="op">*</span> S <span class="op">/</span> N </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    recovery <span class="op">=</span> γ <span class="op">*</span> I</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">begin</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        du[<span class="fl">1</span>] <span class="op">=</span> <span class="op">-</span>infection <span class="co"># u의 첫번째 아이템의 전미분인 미감염자의 비율입니다.</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        du[<span class="fl">2</span>] <span class="op">=</span> infection <span class="op">-</span> recovery <span class="co"># Infected</span></span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        du[<span class="fl">3</span>] <span class="op">=</span> recovery <span class="co"># Recovered</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cn">nothing</span></span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DifferentialEquations</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">sir_ode!</span>(du, u, p, t)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    (S, I, R) <span class="op">=</span> u</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    (β, γ) <span class="op">=</span> p</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> S <span class="op">+</span> I <span class="op">+</span> R    <span class="co"># N은 전체 인원입니다.</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    infection <span class="op">=</span> β <span class="op">*</span> I <span class="op">*</span> S <span class="op">/</span> N </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    recovery <span class="op">=</span> γ <span class="op">*</span> I</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="pp">@inbounds</span> <span class="cf">begin</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        du[<span class="fl">1</span>] <span class="op">=</span> <span class="op">-</span>infection <span class="co"># u의 첫번째 아이템의 전미분인 미감염자의 비율입니다.</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        du[<span class="fl">2</span>] <span class="op">=</span> infection <span class="op">-</span> recovery <span class="co"># Infected</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        du[<span class="fl">3</span>] <span class="op">=</span> recovery <span class="co"># Recovered</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="cn">nothing</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
 </div>
 <p>붉은색 선을 보시면 감여자 수가 피크를 그리고나면 점차 줄어드는 것을 볼 수 있습니다.</p>
 <div class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span>, <span class="bu">StatsPlots</span>, <span class="bu">LaTeXStrings</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>susceptible <span class="op">=</span> <span class="fl">10_000_000.0</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>infected <span class="op">=</span> <span class="fl">10.0</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>recovered <span class="op">=</span> <span class="fl">0.0</span> </span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> [susceptible, infected, recovered]</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.03</span>]</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> <span class="fu">ODEProblem</span>(sir_ode!, u, (<span class="fl">1.0</span>, <span class="fl">100.0</span>), p)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>sol_ode <span class="op">=</span> <span class="fu">solve</span>(prob)</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sol_ode, label<span class="op">=</span>[L<span class="st">"S"</span> L<span class="st">"I"</span> L<span class="st">"R"</span>],</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    lw<span class="op">=</span><span class="fl">3</span>,</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span>L<span class="st">"t"</span>,</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span>L<span class="st">"N"</span>,</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    yformatter<span class="op">=</span>y <span class="op">-&gt;</span> <span class="fu">string</span>(<span class="fu">round</span>(<span class="dt">Int64</span>, y <span class="op">÷</span> <span class="fl">1_000_000</span>)) <span class="op">*</span> <span class="st">"mi"</span>,</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"SIR Model for 100 days, β = </span><span class="sc">$</span>(p[<span class="fl">1</span>])<span class="st">, γ = </span><span class="sc">$</span>(p[<span class="fl">2</span>])<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="4">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Plots</span>, <span class="bu">StatsPlots</span>, <span class="bu">LaTeXStrings</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>susceptible <span class="op">=</span> <span class="fl">10_000_000.0</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>infected <span class="op">=</span> <span class="fl">10.0</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>recovered <span class="op">=</span> <span class="fl">0.0</span> </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> [susceptible, infected, recovered]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>p <span class="op">=</span> [<span class="fl">0.5</span>, <span class="fl">0.03</span>]</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>prob <span class="op">=</span> <span class="fu">ODEProblem</span>(sir_ode!, u, (<span class="fl">1.0</span>, <span class="fl">100.0</span>), p)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>sol_ode <span class="op">=</span> <span class="fu">solve</span>(prob)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(sol_ode, label<span class="op">=</span>[L<span class="st">"S"</span> L<span class="st">"I"</span> L<span class="st">"R"</span>],</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    lw<span class="op">=</span><span class="fl">3</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    xlabel<span class="op">=</span>L<span class="st">"t"</span>,</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    ylabel<span class="op">=</span>L<span class="st">"N"</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    yformatter<span class="op">=</span>y <span class="op">-&gt;</span> <span class="fu">string</span>(<span class="fu">round</span>(<span class="dt">Int64</span>, y <span class="op">÷</span> <span class="fl">1_000_000</span>)) <span class="op">*</span> <span class="st">"mi"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    title<span class="op">=</span><span class="st">"SIR Model for 100 days, β = </span><span class="sc">$</span>(p[<span class="fl">1</span>])<span class="st">, γ = </span><span class="sc">$</span>(p[<span class="fl">2</span>])<span class="st">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="34">
 <p><img src="index_files/figure-html/cell-4-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
 <p>이 그래프를 여러가지 파라미터를 바꿔가면서 그려 보면 <span class="math inline">\(\beta\)</span>는 얼마나 빠르게 올라가는지 그리고 피크가 어디에 위치하는지를 결정한다면, <span class="math inline">\(\gamma\)</span>는 피크의 높이를 결정한다는 걸 볼 수 있습니다.</p>
 <div class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>beta <span class="op">=</span> <span class="fl">0.1</span><span class="op">:</span><span class="fl">0.3</span><span class="op">:</span><span class="fl">1.0</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>gamma <span class="op">=</span> <span class="fl">0.01</span><span class="op">:</span><span class="fl">0.03</span><span class="op">:</span><span class="fl">0.1</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plots</span>(beta, gamma, susceptible, infected, recovered) </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> [susceptible, infected, recovered]</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    charts <span class="op">=</span> []</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (b, g) <span class="kw">in</span> [(b,g) for b <span class="kw">in</span> beta for g <span class="kw">in</span> gamma]</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> [b, g]</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        prob <span class="op">=</span> <span class="fu">ODEProblem</span>(sir_ode!, u, (<span class="fl">1.0</span>, <span class="fl">100.0</span>), p)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        sol_ode <span class="op">=</span> <span class="fu">solve</span>(prob)</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        chart <span class="op">=</span> <span class="fu">plot</span>(sol_ode, </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>            lw<span class="op">=</span><span class="fl">3</span>,</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>            xlabel<span class="op">=</span>L<span class="st">"t"</span>,</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>            yformatter<span class="op">=</span>y <span class="op">-&gt;</span> <span class="fu">string</span>(<span class="fu">round</span>(<span class="dt">Int64</span>, y <span class="op">÷</span> <span class="fl">1_000_000</span>)) <span class="op">*</span> <span class="st">"mi"</span>,</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">"β = </span><span class="sc">$</span>(p[<span class="fl">1</span>])<span class="st">, γ = </span><span class="sc">$</span>(p[<span class="fl">2</span>])<span class="st">"</span>, legend<span class="op">=</span><span class="cn">false</span>)</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(charts, chart)</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> charts</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>charts <span class="op">=</span> <span class="fu">plots</span>(beta,gamma, susceptible, infected, recovered)</span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>((chart) <span class="op">-&gt;</span> <span class="fu">plot!</span>(chart, ylabel<span class="op">=</span>L<span class="st">"N"</span>), charts[<span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">:</span><span class="fl">16</span>])</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(charts<span class="op">...</span>, layout<span class="op">=</span>(<span class="fl">4</span>, <span class="fl">4</span>), </span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>size<span class="op">=</span>(<span class="fl">850</span>, <span class="fl">800</span>), plot_title<span class="op">=</span><span class="st">"SIR Model for 100 days"</span>, label<span class="op">=</span>[L<span class="st">"S"</span> L<span class="st">"I"</span> L<span class="st">"R"</span>],)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="5">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>beta <span class="op">=</span> <span class="fl">0.1</span><span class="op">:</span><span class="fl">0.3</span><span class="op">:</span><span class="fl">1.0</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>gamma <span class="op">=</span> <span class="fl">0.01</span><span class="op">:</span><span class="fl">0.03</span><span class="op">:</span><span class="fl">0.1</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">plots</span>(beta, gamma, susceptible, infected, recovered) </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    u <span class="op">=</span> [susceptible, infected, recovered]</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    charts <span class="op">=</span> []</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (b, g) <span class="kw">in</span> [(b,g) for b <span class="kw">in</span> beta for g <span class="kw">in</span> gamma]</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> [b, g]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        prob <span class="op">=</span> <span class="fu">ODEProblem</span>(sir_ode!, u, (<span class="fl">1.0</span>, <span class="fl">100.0</span>), p)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>        sol_ode <span class="op">=</span> <span class="fu">solve</span>(prob)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        chart <span class="op">=</span> <span class="fu">plot</span>(sol_ode, </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>            lw<span class="op">=</span><span class="fl">3</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>            xlabel<span class="op">=</span>L<span class="st">"t"</span>,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>            yformatter<span class="op">=</span>y <span class="op">-&gt;</span> <span class="fu">string</span>(<span class="fu">round</span>(<span class="dt">Int64</span>, y <span class="op">÷</span> <span class="fl">1_000_000</span>)) <span class="op">*</span> <span class="st">"mi"</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>            title<span class="op">=</span><span class="st">"β = </span><span class="sc">$</span>(p[<span class="fl">1</span>])<span class="st">, γ = </span><span class="sc">$</span>(p[<span class="fl">2</span>])<span class="st">"</span>, legend<span class="op">=</span><span class="cn">false</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">push!</span>(charts, chart)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> charts</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>charts <span class="op">=</span> <span class="fu">plots</span>(beta,gamma, susceptible, infected, recovered)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="fu">map</span>((chart) <span class="op">-&gt;</span> <span class="fu">plot!</span>(chart, ylabel<span class="op">=</span>L<span class="st">"N"</span>), charts[<span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">:</span><span class="fl">16</span>])</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(charts<span class="op">...</span>, layout<span class="op">=</span>(<span class="fl">4</span>, <span class="fl">4</span>), </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>size<span class="op">=</span>(<span class="fl">850</span>, <span class="fl">800</span>), plot_title<span class="op">=</span><span class="st">"SIR Model for 100 days"</span>, label<span class="op">=</span>[L<span class="st">"S"</span> L<span class="st">"I"</span> L<span class="st">"R"</span>],)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="35">
 <p><img src="index_files/figure-html/cell-5-output-1.svg" class="img-fluid"></p>
 </div>
 </div>
