@@ -1,6 +1,5 @@
 ---
 title: "Economist 시각화 가이드를 matplotlib에 적용하기"
-author: "Jun Damin"
 date: "2022-11-02"
 categories:
   - python

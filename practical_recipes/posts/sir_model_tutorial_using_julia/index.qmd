@@ -1,0 +1,175 @@
+---
+title: "SIR모델을 사용해 코로나 발병 예측하기 with Julia"
+date: "2022-11-15"
+cagetory:
+  - julia
+  - bayesian
+  - statistics
+  - tutorial
+jupyter: julia-1.8
+output: true
+warning: false
+code-fold: true
+image: sir_model.png
+---
+
+코로나19로 인해 감염병 모델링에 대한 관심이 높아졌습니다. 
+질병이 어떻게 퍼져나가는지 예측할 수 있는 건 이후 대응을 위해서도 아주 중요한 지식임을 많은 사람들이 알게 되었습니다.
+여러가지 예측하는 방법이 있습니다만, 오늘은 수리 모델링을 통해서 이에 대해서 알아보고자 합니다.
+
+수리 모델(Methmetical Model)은 계산모델(Computational Model)이라고도 할 수 있습니다.
+현상에 대해서 우리가 아는 내용을 수식으로 정리하고 이후 어떻게 변해가는지를 계산하는 방식이라고 할 수 있습니다.
+감염병 확산에 대한 수리 모델은 여러가지 갈래로 발전하고 있는데 일반적으로 가장 간단한 모델로 SIR 모델를 뽑습니다.
+
+## SIR 모델
+
+감염병에 대한 수치적 모델의 대표적인 모델이 SIR 모델입니다. 
+SIR은 Susceptible, Infected, Recovered의 첫 글자를 모은 것입니다.
+저 3가지 상태로 사람들이 분류 된다고 보고 이에 대한 모델을 만드는 것입니다.
+
+이에 대해서는 당연하다고 생각되는 몇가지 가정을 수식으로 만들었습니다. 
+
+- 새롭게 감염된 사람들의 수 만큼 미감염자(Susceptible)의 수는 줄어들 것이다.
+- 새롭게 감염된 사람들의 수 만큼 감염자(Infected)는 늘어날 것이다.
+- 새롭게 회복된 사람들의 수 만큼 감염자 수는 줄어 들 것이다.
+- 새롭게 회복된 인원의 수 만큼 회복된 인원(Recovered)은 늘어날 것이다.
+
+이 모델은 아래와 같이 일방향으로 사람들의 상태가 변해가는 것을 볼 수 있습니다.
+따라서 장기적으로 보면 모두 회복된 사람들이 될 것입니다.
+
+```{mermaid}
+flowchart LR
+
+Susceptible -->|susceptible, infected| Infected
+Infected --> Recovered
+
+```
+
+새롭게 감염되는 사람과 새롭게 회복되는 사람에 대해서 몇가지 가정이 추가 됩니다.
+
+- 새롭게 감염되는 사람의 수는 이전 미감염된 사람의 수가 많을 수록 많아지며 그 수는 감염자 비율이 높을 수록 커질 것이다.
+- 새롭게 회복되는 사람의 수는 감염자 수가 많을 수록 많을 것이다.
+
+이 가정들을 모아서 아래와 같이 수식으로 만들 수 있습니다.
+
+$$
+\frac{dS}{dt} = - \beta \frac{S \cdot I}{N}
+$$
+$$
+\frac{dI}{dt} = \beta \frac{S \cdot I}{N} - \gamma I 
+$$
+$$
+\frac{dR}{dt} = \gamma I
+$$
+
+
+이제 이 아이디어를 코딩으로 옮겨 보고자 합니다.
+
+## SIR모델 코딩하기 
+
+
+:::{.callout-note}
+### 왜 줄리아인가? 
+
+줄리아는 2012년 공개된 새로운 프로그래밍 언어 입니다. 과학적 계산을 목표로 만들어진 언어로 아직 사용자는 적지만 주목을 받고 있는 언어입니다.
+
+인터프리터 언어인 파이썬의 느린 속도를 해결하면서도 파이썬 만큼 사용하기 쉬운 언어라고 소개되곤 합니다. 파이썬 만큼 쓰기 편한 것은 모르겠지만, 과학을 하기에는 정말 좋은 언어라고 생각합니다.
+
+:::
+
+### 필요한 패키지 설치하기
+
+줄리아는  Pkg 모듈을 사용해서 아래와 같이 필요한 패키지를 설치할 수 있습니다.
+
+줄리아 패키지 설치가 상당히 많은 시간이 소요될 수 있습니다.
+
+```{julia}
+using Pkg
+
+Pkg.add(["Turing", "LazyArrays", "Random", "DifferentialEquations", "Plots", "StatsPlots", "LaTeXStrings", "Downloads", "DataFrames", "CSV", "Chain", "Dates"])
+
+```
+
+## SIR 모델 만들기
+
+줄리아는 위의 수식을 아래와 같이 정리할 수 있습니다.
+du, u, p, t를 지정해야 합니다. 
+
+여기서 p는 파라미터, t는 시간을 의미하며 u는 변수이며 du는 그 1차 미분을 의미합니다.
+이것을 바탕으로 위의 수식을 최대한 비슷하게 작성할 수 있습니다.
+
+```{julia}
+using DifferentialEquations
+
+function sir_ode!(du, u, p, t)
+    (S, I, R) = u
+    (β, γ) = p
+    N = S + I + R    # N은 전체 인원입니다.
+    infection = β * I * S / N 
+    recovery = γ * I
+    @inbounds begin
+        du[1] = -infection # u의 첫번째 아이템의 전미분인 미감염자의 비율입니다.
+        du[2] = infection - recovery # Infected
+        du[3] = recovery # Recovered
+    end
+    nothing
+end;
+```
+
+붉은색 선을 보시면 감여자 수가 피크를 그리고나면 점차 줄어드는 것을 볼 수 있습니다.
+
+```{julia}
+using Plots, StatsPlots, LaTeXStrings
+
+susceptible = 10_000_000.0
+infected = 10.0
+recovered = 0.0 
+
+u = [susceptible, infected, recovered]
+p = [0.5, 0.03]
+prob = ODEProblem(sir_ode!, u, (1.0, 100.0), p)
+sol_ode = solve(prob)
+plot(sol_ode, label=[L"S" L"I" L"R"],
+    lw=3,
+    xlabel=L"t",
+    ylabel=L"N",
+    yformatter=y -> string(round(Int64, y ÷ 1_000_000)) * "mi",
+    title="SIR Model for 100 days, β = $(p[1]), γ = $(p[2])")
+```
+
+이 그래프를 여러가지 파라미터를 바꿔가면서 그려 보면 $\beta$는 얼마나 빠르게 올라가는지 그리고 피크가 어디에 위치하는지를 결정한다면, $\gamma$는 피크의 높이를 결정한다는 걸 볼 수 있습니다.
+
+```{julia}
+
+beta = 0.1:0.3:1.0
+gamma = 0.01:0.03:0.1
+
+function plots(beta, gamma, susceptible, infected, recovered) 
+    u = [susceptible, infected, recovered]
+    charts = []
+    for (b, g) in [(b,g) for b in beta for g in gamma]
+        p = [b, g]
+        prob = ODEProblem(sir_ode!, u, (1.0, 100.0), p)
+        sol_ode = solve(prob)
+        chart = plot(sol_ode, 
+            lw=3,
+            xlabel=L"t",
+            yformatter=y -> string(round(Int64, y ÷ 1_000_000)) * "mi",
+            title="β = $(p[1]), γ = $(p[2])", legend=false)
+        push!(charts, chart)
+    end
+    return charts
+end
+
+charts = plots(beta,gamma, susceptible, infected, recovered)
+map((chart) -> plot!(chart, ylabel=L"N"), charts[1:4:16])
+
+plot(charts..., layout=(4, 4), 
+size=(850, 800), plot_title="SIR Model for 100 days", label=[L"S" L"I" L"R"],)
+```
+
+## 마치며 
+
+간단한 가정을 가지고 모델을 만드는 것을 연습해보았습니다.
+단순한 몇가지 가정만으로도 우리는 피크에 다다르는 모델을 볼 수 있었습니다.
+그럼 이제 실제 데이터를 가지고 저 파라미터가 재생산지수와 어떤 관게가 있는지, 파라미터를 어떻게 알 수 있을지 다음 포스트로 알아보도록 하겠습니다.
