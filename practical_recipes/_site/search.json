@@ -124,5 +124,12 @@
     "title": "About",
     "section": "",
     "text": "데이터 과학에 관련된 코드와 지식을 공유하고자 합니다. 데이터를 통한 의사결정에 관심이 많습니다."
+  },
+  {
+    "objectID": "posts/javis_retrograde_motion/index.html",
+    "href": "posts/javis_retrograde_motion/index.html",
+    "title": "Javis.jl를 사용해서 역행운동을 실행해 보자",
+    "section": "",
+    "text": "유튜브를 보는 도중에 행성의 겉보기 역행 운동에 대한 영상을 보았습니다. 행성의 역행운동이란 지구에서 보기에 행성이 반대방향으로 움직이는 것처럼 보이는 현상입니다. 행성은 태양을 중심으로 돌고 있지만, 행성 간의 공전 속도의 차이로 뒤로 움직이는 듯이 보이는 현상을 말합니다. \n행성이 있고 보이는 각이 어떻게 바뀌는지를 시뮬레이션을 해보고자 하는데 줄리아에서 애니메이션을 만들 때 사용할 수 있는 Javis를 사용해서 그려보겠습니다.\n\nusing Javis\n\nfunction ground(args...) \n    background(\"white\") # canvas background\n    sethue(\"black\") # pen color\nend\nfunction object(p=O, color=\"black\")\nsethue(color)\ncircle(p, 25, :fill)\nreturn p\nend\n\n\nfunction path!(points, pos, color)\nsethue(color)\npush!(points, pos) # add pos to points\ncircle.(points, 2, :fill) # draws a circle for each point using broadcasting\nend\n\n\nfunction connector(p1, p2, color)\nsethue(color)\nline(p1,p2, :stroke)\nend\n\n\nfunction extender(points, p1, p2, r, color)\nsethue(color)\nd = p2 - p1\np3 = getpoint(p2, d, r, O)\nline(p1, p3, :stroke)\ncircle(p3, 2, :fill)\npush!(points, p3)\nif length(points) > 200\npopat!(points, 1)\nend\ncircle.(points, 2, :fill)\nend\n\n\nimport Base.abs\n\n\nfunction abs(p::Point, p0::Point)\nd = p - p0\nr = sqrt(d.x^2 + d.y^2)\nreturn r\nend\n\n\nfunction getpoint(p, d, r, p0)\nλ = 0.001\nrate = 0.001\nnew_p = p\nwhile true\nnew_p = p + λ * d\nif r < abs(new_p, p0)\nbreak\nend\nλ += rate\nend\nreturn new_p\nend\n\n\nn = 1000\nmyvideo = Video(2000, 2000)\nBackground(1:n, ground)\npath_of_red = Point[]\npath_of_blue = Point[]\nred_ball = Object(1:n, (args...)->object(O, \"#ff2211\"), Point(100,0))\nact!(red_ball, Action(anim_rotate_around(24π, O)))\nblue_ball = Object(1:n, (args...)->object(O, \"#1122ff\"), Point(200,0))\nact!(blue_ball, Action(anim_rotate_around(7π, O)))\nObject(1:n, (args...)->connector(pos(red_ball), pos(blue_ball), \"black\"))\nObject(1:n, (args...)->path!(path_of_red, pos(red_ball), \"red\"))\nObject(1:n, (args...)->path!(path_of_blue, pos(blue_ball), \"blue\"))\npoints = []\nObject(1:n, (args...)->extender(points, pos(red_ball), pos(blue_ball), 800, \"#112233\"))\n\n\nrender(\nmyvideo;\npathname=\"retrograde_motion.gif\"\n)\n\n\n\n\n역행운동"
   }
 ]
