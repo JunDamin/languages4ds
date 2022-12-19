@@ -2,9 +2,11 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/leos_syndrome/index.html",
       "/posts/sir_model_tutorial_using_julia/index.html",
       "/posts/lineplot_following_economist_visual_guide/index.html",
       "/posts/regression_using_jax/index.html",
+      "/posts/javis_retrograde_motion/index.html",
       "/posts/how_to_install_python_package_under_offline_enviromnent/index.html",
       "/posts/bayesian_approach_for_COVID-19_vaccine_efficacy/index.html"
     ]
