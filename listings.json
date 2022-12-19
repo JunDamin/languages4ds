@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/leos_syndrome/index.html",
       "/posts/sir_model_tutorial_using_julia/index.html",
       "/posts/lineplot_following_economist_visual_guide/index.html",
       "/posts/regression_using_jax/index.html",
