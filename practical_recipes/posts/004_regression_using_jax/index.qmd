@@ -15,9 +15,14 @@ JAX를 설치해 봅시다.
 설치를 할 때 먼저 jaxlib을 설치하고 그 버전에 맞는 jax를 설치합니다.
 순서가 바뀐 경우 잘 안되는 문제가 발생하곤 했습니다.
 
+linux에서는 문제가 없는 것으로 보이나 windows에서 실행할 경우에는
+[jaxlib whl](https://whls.blob.core.windows.net/unstable/index.html)에서 jaxlib을 받아서 설치해야 합니다.
+
+그리고 그 파일 버전에 맞춰서 jax를 설치해 주어야 합니다.
+저 같은 경우에는 `jax` 0.3.7으로 설치했습니다.
 ```bash
-pip install jaxlib
-pip install jax==0.3.15
+pip install jaxlib-0.3.7-cp310-none-win_amd64.whl
+pip install jax==0.3.7
 ```
 
 ### 필요한 패키지를 불러옵니다

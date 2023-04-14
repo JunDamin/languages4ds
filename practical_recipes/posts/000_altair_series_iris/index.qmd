@@ -1,0 +1,411 @@
+---
+title: Altair를 이용한 iris 데이터 시각화
+date: "2023-04-13"
+cagetory:
+  - python
+  - altair 
+  - visualization
+  - tutorial
+output: true
+warning: false
+code-fold: true
+image: iris.png
+draft: true
+---
+
+
+
+# Altair란?
+
+
+### 데이터 불러오기
+
+데이터 시각화에서 많이 쓰이는 iris 데이터 입니다.
+유명한 Fisher경이 수집했다고 알려져 있습니다.
+
+꽃잎길이, 꽃입폭, 꽃바침길이, 꽃받침폭와 품종을 정리한 150개 기록이 있습니다.
+
+```{python}
+import pandas as pd
+
+data = pd.read_csv(
+           "https://raw.githubusercontent.com/blackdew/tensorflow1/master/csv/iris.csv"
+       )
+data
+```
+
+
+### 산포도
+
+산포도를 그려봅니다. 
+
+altair는 grammar of graphics의 영향으로 `DataFrame` 혹은 `json`을 인풋으로 받고 그래프를 생성합니다.
+그래프 생성은 각 성격을 지정하는 방식으로 이루어져 굉장히 유연하게 점진적 그래프를 그랠 수 있는 특징이 있습니다. 
+
+우선은 꽃잎길이와 꽃잎폭을 품종별로 산포도를 그려 봅니다.
+
+```{python}
+import altair as alt
+
+(alt.Chart(data)    # 그래프에 들어갈 데이터를 정의합니다.
+    .mark_point()    # 어떤 모양을 만들지 결정합니다.
+    .encode(x="꽃잎길이", y="꽃잎폭", color="품종")    # 각각의 값이 어떤 의미를 가질지 정리합니다. 
+    .properties(width=400, height=400)    # 크기를 지정합니다.
+)
+```
+
+위에 그래프 처럼 altair는 기본적으로 여러 레이어로 구성되어 있습니다.
+mark, encode, properties가 있어 각각을 지정함으로 같은 데이터를 탐색할 때 보다 쉽게 접근할 수 있습니다.
+
+기본 설정을 사용할 때는 단순히 이름만 쓰면 됩니다만, 세부옵션을 지정하고 싶다면 해당되는 다양한 `class`를 사용할 수 있습니다.
+
+```{python}
+
+(alt.Chart(data, title="iris 데이터 시각화")
+    .mark_point()
+    .encode(
+        x=alt.X("꽃잎길이", scale=alt.Scale(domain=[4, 8])),
+        y=alt.Y("꽃잎폭", scale=alt.Scale(domain=[1, 5])),
+        color="품종")
+    .properties(width=400, height=400)
+)
+```
+
+
+확장성을 위해서 그래프를 지정하고 다른 값들을 나중에 지정하면서 그래프를 그릴 수 있습니다.
+따라서 공통적으로 볼 내용을 미리 정하고 탐색적으로 그래프를 볼 수 있는 장점이 있습니다.
+
+```{python}
+
+base = (alt.Chart(data, title="iris 데이터 시각화")
+    .mark_point()
+    .properties(width=400, height=400)
+)
+
+base.encode(
+        x=alt.X("꽃받침길이", scale=alt.Scale(domain=[0, 8])),
+        y=alt.Y("꽃받침폭", scale=alt.Scale(domain=[0, 3])),
+        color="품종")
+
+```
+
+## tick 그래프
+
+동일한 내용을 산포도가 아닌 그래프를 그리기 위해선 아래와 같이 `mark`와 `encode` 값을 바꾸면 됩니다.
+
+1차원의 값을 비교하기 위해서 아래와 같이 그래프를 그릴 수 있습니다. 
+
+```{python}
+
+(alt.Chart(data, title="iris 데이터 시각화")
+    .mark_tick()
+    .encode(
+        x=alt.X("꽃받침길이", scale=alt.Scale(domain=[0, 8])),
+        y=alt.Y("품종",),
+        color="품종")
+    .properties(width=400, height=150)
+)
+
+```
+
+### 원 그래프도 그랠 수 있습니다.
+
+기본적으로 `bin`을 통해 히스토그램을 그릴 수 있습니다.
+
+```{python}
+(alt.Chart(data, title="iris 데이터 시각화")
+    .mark_rect().encode(
+        alt.X('꽃받침길이:Q', bin=True, scale=alt.Scale(domain=[0, 8])),
+        alt.Y('count()'),
+        size='count()',
+        color="품종")
+    .properties(width=400, height=400)
+)
+
+```
+
+```{python}
+(alt.Chart(data, title="iris 데이터 시각화")
+    .mark_circle().encode(
+        alt.X('꽃받침길이:Q', bin=True, scale=alt.Scale(domain=[0, 8])),
+        alt.Y('꽃받침폭:Q', bin=True, scale=alt.Scale(domain=[0, 3])),
+        size='count()',
+        color="품종")
+    .properties(width=400, height=400)
+)
+```
+
+## 다앙한 그래프를 별도로 생성하고 각각을 모아서 그래프를 생성할 수 있습니다.
+
+특징은 다양한 그래프를 그릴 수 있습니다.
+
+```{python}
+# Configure the options common to all layers
+brush = alt.selection(type='interval')
+base = alt.Chart(data).add_selection(brush)
+
+# Configure the points
+points = base.mark_point().encode(
+    x=alt.X('꽃잎길이', title=''),
+    y=alt.Y('꽃받침길이', title=''),
+    color=alt.condition(brush, '품종', alt.value('grey')),
+).properties(title="Iris 데이터 시각화")
+
+# Configure the ticks
+tick_axis = alt.Axis(labels=False, domain=False, ticks=False)
+
+x_ticks = base.mark_tick().encode(
+    alt.X('꽃잎길이', axis=tick_axis),
+    alt.Y('품종', title='', axis=tick_axis),
+    color=alt.condition(brush, '품종', alt.value('lightgrey'))
+)
+
+y_ticks = base.mark_tick().encode(
+    alt.X('품종', title='', axis=tick_axis),
+    alt.Y('꽃받침길이', axis=tick_axis),
+    color=alt.condition(brush, '품종', alt.value('lightgrey'))
+)
+
+# Build the chart
+(y_ticks | (points & x_ticks))
+```
+
+```{python}
+
+alt.Chart(data).transform_density(
+    '꽃잎길이',
+    as_=['꽃잎길이', 'density'],
+    extent=[3, 9],
+    groupby=['품종']
+).mark_area(orient='horizontal').encode(
+    y='꽃잎길이:Q',
+    color='품종:N',
+    x=alt.X(
+        'density:Q',
+        stack='center',
+        impute=None,
+        title=None,
+        axis=alt.Axis(labels=False, values=[0],grid=False, ticks=True),
+    ),
+    column=alt.Column(
+        '품종:N',
+        header=alt.Header(
+            titleOrient='bottom',
+            labelOrient='bottom',
+            labelPadding=0,
+        ),
+    )
+).properties(
+    width=100
+).configure_facet(
+    spacing=0
+).configure_view(
+    stroke=None
+)
+
+```
+
+
+```{python}
+
+brush = alt.selection(type='interval')
+base = alt.Chart(data).add_selection(brush)
+
+stripplot =  base.mark_circle(size=8).encode(
+    x=alt.X(
+        'jitter:Q',
+        title=None,
+        axis=alt.Axis(values=[0], ticks=True, grid=False, labels=False),
+    ),
+    y=alt.Y('꽃잎길이:Q', scale=alt.Scale(domain=[3, 9])),
+    color=alt.condition(brush, '품종:N', alt.value('grey')),
+    column=alt.Column(
+        '품종:N',
+        header=alt.Header(
+            labelAngle=-90,
+            titleOrient='top',
+            labelOrient='bottom',
+            labelAlign='right',
+            labelPadding=0
+        ),
+    ),
+).transform_calculate(
+    # Generate Gaussian jitter with a Box-Muller transform
+    jitter='sqrt(-2*log(random()))*cos(2*PI*random())'
+).properties(width=50)
+stripplot
+
+```
+
+```{python}
+
+
+tick_xaxis = alt.Axis(domain=False, ticks=False, orient="top", labelAlign="right")
+tick_yaxis = alt.Axis(domain=False, labels=False, ticks=False)
+tick_plot = base.mark_tick().encode(
+                x=alt.X("품종", axis=tick_xaxis, title=""),
+                y=alt.Y("꽃잎길이", scale=alt.Scale(domain=[3, 9]), axis=tick_yaxis, title=""),
+                color=alt.condition(brush, '품종', alt.value('grey'),),
+)
+tick_plot
+
+```
+
+```{python}
+hconcat = alt.hconcat(stripplot, tick_plot)
+
+hconcat.configure_facet(
+    spacing=0
+).configure_view(
+   stroke=None
+).display()
+
+```
+
+
+```{python}
+
+alt.Chart(data).transform_fold(
+    ['꽃받침길이', '꽃받침폭', '꽃잎길이', "꽃잎폭"],
+    as_=['측정', '길이']
+).mark_bar(
+    opacity=0.3,
+    binSpacing=0
+).encode(
+    alt.X('길이:Q', bin=alt.Bin(maxbins=100)),
+    alt.Y('count()', stack=None),
+    alt.Color('품종:N'),
+    column=alt.Column("측정:N", title="측정 항목"),
+)
+
+```
+
+
+```{python}
+
+alt.Chart(data.rename({"꽃잎길이":"sepal length", "꽃잎폭": "sepal width", "꽃받침길이": "petal length", "꽃받침폭": "petal width"}, axis=1)).mark_bar(
+    opacity=0.3,
+    binSpacing=0
+).encode(
+    x = alt.X(alt.repeat("column"), bin=alt.Bin(maxbins=30)),
+    y = alt.Y("count()", stack=None),
+    color =alt.Color('품종:N')
+).repeat(
+    column=['sepal length', 'sepal width', "petal length", "petal width"],
+)
+```
+
+
+```{python}
+
+rect = alt.Chart(data, title="Iris 데이터 시각화").mark_rect().encode(
+    alt.X('꽃받침길이:Q', bin=True),
+    alt.Y('꽃잎길이:Q', bin=True),
+    alt.Color('count()',
+        scale=alt.Scale(scheme='greenblue'),
+        legend=alt.Legend(title='개체수')
+    )
+).properties(width=300, height=400)
+rect
+
+```
+
+```{python}
+    error_bars = alt.Chart(data).mark_errorbar(extent='stdev').encode(
+      x=alt.X('꽃받침길이:Q', scale=alt.Scale(zero=False)),
+      y=alt.Y('품종:N')
+    )
+
+    points = alt.Chart(data).mark_point(filled=True, color='black').encode(
+      x=alt.X('꽃받침길이:Q', aggregate='mean'),
+      y=alt.Y('품종:N'),
+    )
+
+    chart = error_bars + points
+    chart
+```
+
+
+```{python}
+
+base = alt.Chart(data)
+
+xscale = alt.Scale(domain=(4.0, 8.0))
+yscale = alt.Scale(domain=(1.9, 4.55))
+
+bar_args = {'opacity': .3, 'binSpacing': 0}
+
+points = base.mark_circle().encode(
+    alt.X('꽃잎길이', scale=xscale),
+    alt.Y('꽃잎폭', scale=yscale),
+    color='품종',
+)
+
+top_hist = base.mark_bar(**bar_args).encode(
+    alt.X('꽃잎길이:Q',
+          # when using bins, the axis scale is set through
+          # the bin extent, so we do not specify the scale here
+          # (which would be ignored anyway)
+          bin=alt.Bin(maxbins=20, extent=xscale.domain),
+          stack=None,
+          title=''
+          ),
+    alt.Y('count()', stack=None, title=''),
+    alt.Color('품종:N'),
+).properties(height=60)
+
+right_hist = base.mark_bar(**bar_args).encode(
+    alt.Y('꽃잎폭:Q',
+          bin=alt.Bin(maxbins=20, extent=yscale.domain),
+          stack=None,
+          title='',
+          ),
+    alt.X('count()', stack=None, title=''),
+    alt.Color('품종:N'),
+).properties(width=60)
+
+chart = top_hist & (points | right_hist)
+chart
+```
+
+
+```{python}
+
+
+base = alt.Chart(data).transform_quantile(
+    '꽃잎길이',
+    step=0.01,
+    as_ = ['p', '꽃잎길이']
+).transform_calculate(
+    uniform = 'quantileUniform(datum.p)'
+).mark_point().encode(
+    y=alt.Y('꽃잎길이:Q', scale=alt.Scale(domain=[4, 8])),
+)
+
+base.encode(x='uniform:Q',)
+
+```
+
+
+```{python}
+
+
+alt.Chart(data).transform_fold(
+    ['꽃잎길이',
+     '꽃잎폭',
+     '꽃받침길이',
+     '꽃받침폭'],
+    as_ = ['Measurement_type', 'value']
+).transform_density(
+    density='value',
+    bandwidth=0.3,
+    groupby=['Measurement_type', "품종"],
+    extent= [0, 8]
+).mark_area().encode(
+    alt.X('value:Q'),
+    alt.Y('density:Q'),
+    alt.Row('Measurement_type:N'),
+    color=alt.Color("품종:N")
+).properties(width=300, height=50)
+
+```

@@ -30,7 +30,7 @@ df = CSV.File(file) |> DataFrame
 ```{julia}
 kor = @chain df begin
     filter([:iso_code] => (iso_code) -> iso_code == "KOR", _)
-end;
+end
 
 ```
 
@@ -120,17 +120,17 @@ seed!(123)
 
     #likelihood
     infected ~ arraydist(LazyArray(@~ NegativeBinomial2.(sol_, phi)))
-end;
+end
 ```
 
 
 
 ```{julia}
-infected = kor[:, :new_cases]
-r_ = 0
-i_ = 1
-N = maximum(kor[:, :population])
-model_sir = bayes_sir(infected, i_, r_, N)
-chain_sir = sample(model_sir, NUTS(), 1_000)
-summarystats(chain_sir[[:β, :γ]])
+# infected = kor[:, :new_cases]
+# r_ = 0
+# i_ = 1
+# N = maximum(kor[:, :population])
+# model_sir = bayes_sir(infected, i_, r_, N)
+# chain_sir = sample(model_sir, NUTS(), 1_000)
+# summarystats(chain_sir[[:β, :γ]])
 ```

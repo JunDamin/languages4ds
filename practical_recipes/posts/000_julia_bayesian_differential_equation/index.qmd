@@ -14,6 +14,9 @@ code-fold: true
 image: bayesian_differential_equation.png
 ---
 
+
+필요한 패키지를 불러옵니다. 
+
 ```{julia}
 using Turing
 using DifferentialEquations
@@ -28,7 +31,7 @@ using Random
 Random.seed!(14);
 ```
 
-
+lotka_volterra 방정식을 정의합니다.
 ```{julia}
 
 # Define Lotka-Volterra model.
@@ -55,6 +58,7 @@ prob = ODEProblem(lotka_volterra, u0, tspan, p)
 plot(solve(prob, Tsit5()))
 ```
 
+오차를 넣어 방정식을 따르는 데이터를 추출해 봅니다.
 
 ```{julia}
 sol = solve(prob, Tsit5(); saveat=0.1)
@@ -65,6 +69,7 @@ plot(sol; alpha=0.3)
 scatter!(sol.t, odedata'; color=[1 2], label="")
 ```
 
+데이터를 기반으로 파라미터 값을 추정해 봅니다.
 
 ```{julia}
 
@@ -108,69 +113,6 @@ end
 plot!(sol; color=[1 2], linewidth=1)
 scatter!(sol.t, odedata'; color=[1 2])
 ```
-
-
-```{julia}
-
-plot(; legend=false)
-posterior_samples = sample(chain[[:α, :β, :γ, :δ, :x0, :y0]], 100
-; replace=false)
-for p in eachrow(Array(posterior_samples))
-    prob = ODEProblem(lotka_volterra, p[end-1:end], tspan, p[1:4])
-    sol_p = solve(prob, Tsit5(); p=p, saveat=0.1)
-    plot!(sol_p; alpha=0.1, color="#BBBBBB")
-end
-
-# Plot simulation and noisy observations.
-plot!(sol; color=[1 2], linewidth=1)
-scatter!(sol.t, odedata'; color=[1 2], ylim=[-2, 8])
-```
-
-
-
-```{julia}
-
-@model function fitlv(data, prob)
-    # Prior distributions.
-    σ ~ InverseGamma(2, 3)
-    α ~ truncated(Normal(1.5, 0.5); lower=0.5, upper=2.5)
-    β ~ truncated(Normal(1.2, 0.5); lower=0, upper=2)
-    γ ~ truncated(Normal(3.0, 0.5); lower=1, upper=4)
-    δ ~ truncated(Normal(1.0, 0.5); lower=0, upper=2)
-
-    # Simulate Lotka-Volterra model. 
-    p = [α, β, γ, δ]
-    predicted = solve(prob, Tsit5(); p=p, saveat=0.1)
-
-    # Observations.
-    for i in 1:length(predicted)
-        data[:, i] ~ MvNormal(predicted[i], σ^2 * I)
-    end
-
-    return nothing
-end
-
-model = fitlv(odedata, prob)
-
-# Sample 3 independent chains with forward-mode automatic differentiation (the default).
-chain = sample(model, NUTS(0.65), MCMCSerial(), 1000, 3; progress=false)
-```
-
-
-```{julia}
-
-plot(; legend=false)
-posterior_samples = sample(chain[[:α, :β, :γ, :δ]], 300; replace=false)
-for p in eachrow(Array(posterior_samples))
-    sol_p = solve(prob, Tsit5(); p=p, saveat=0.1)
-    plot!(sol_p; alpha=0.1, color="#BBBBBB")
-end
-
-# Plot simulation and noisy observations.
-plot!(sol; color=[1 2], linewidth=1)
-scatter!(sol.t, odedata'; color=[1 2])
-```
-
 
 ### if I only have data
 
@@ -226,56 +168,3 @@ end
 plot!(sol; color=[1 2], linewidth=1)
 scatter!(sol.t, odedata'; color=[1 2])
 ```
-
-
-## Update?
-```{julia}
-
-@model function fitlv4(data)
-    # Prior distributions.
-    σ ~ InverseGamma(2, 3)
-    α ~ truncated(Normal(1.5, 0.5); lower=0.5, upper=2.5)
-    β ~ truncated(Normal(1.2, 0.5); lower=0, upper=2)
-    γ ~ truncated(Normal(3.0, 0.5); lower=1, upper=4)
-    δ ~ truncated(Normal(1.0, 0.5); lower=0, upper=2)
-    x0 ~ Normal(1.0, 0.20 )
-    y0 ~ Normal(1.0, 0.20 )
-
-    # Simulate Lotka-Volterra model. 
-    p = [α, β, γ, δ]
-    u0 = [x0, y0]
-    
-    prob = ODEProblem(lotka_volterra, u0, tspan, p)
-    predicted = solve(prob, Tsit5(); p=p, saveat=0.1)
-
-    # Observations.
-    for i in 1:length(predicted)
-        data[:, i] ~ MvNormal(predicted[i], σ^2 * I)
-    end
-
-    return nothing
-end
-
-model = fitlv4(odedata)
-
-# Sample 3 independent chains with forward-mode automatic differentiation (the default).
-chain = sample(model, NUTS(0.65), MCMCSerial(), 1000, 3; progress=false)
-```
-
-
-```{julia}
-
-plot(; legend=false)
-posterior_samples = sample(chain[[:α, :β, :γ, :δ, :x0, :y0]], 100
-; replace=false)
-for p in eachrow(Array(posterior_samples))
-    prob = ODEProblem(lotka_volterra, p[end-1:end], tspan, p[1:4])
-    sol_p = solve(prob, Tsit5(); p=p, saveat=0.1)
-    plot!(sol_p; alpha=0.1, color="#BBBBBB")
-end
-
-# Plot simulation and noisy observations.
-plot!(sol; color=[1 2], linewidth=1)
-scatter!(sol.t, odedata'; color=[1 2])
-```
-
