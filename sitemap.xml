@@ -1,39 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://JunDamin.github.io/recipes4ds/posts/how_to_install_python_package_under_offline_enviromnent/index.html</loc>
-    <lastmod>2022-12-19T14:13:10.681Z</lastmod>
-  </url>
-  <url>
-    <loc>https://JunDamin.github.io/recipes4ds/posts/bayesian_approach_for_COVID-19_vaccine_efficacy/index.html</loc>
-    <lastmod>2022-12-19T14:13:13.287Z</lastmod>
-  </url>
-  <url>
-    <loc>https://JunDamin.github.io/recipes4ds/posts/javis_retrograde_motion/index.html</loc>
-    <lastmod>2022-12-19T14:13:15.259Z</lastmod>
-  </url>
-  <url>
-    <loc>https://JunDamin.github.io/recipes4ds/posts/sir_model_tutorial_using_julia/index.html</loc>
-    <lastmod>2022-12-19T14:13:16.959Z</lastmod>
-  </url>
-  <url>
-    <loc>https://JunDamin.github.io/recipes4ds/posts/leos_syndrome/index.html</loc>
-    <lastmod>2022-12-19T14:13:20.148Z</lastmod>
-  </url>
-  <url>
-    <loc>https://JunDamin.github.io/recipes4ds/posts/lineplot_following_economist_visual_guide/index.html</loc>
-    <lastmod>2022-12-19T14:13:21.930Z</lastmod>
-  </url>
-  <url>
-    <loc>https://JunDamin.github.io/recipes4ds/posts/regression_using_jax/index.html</loc>
-    <lastmod>2022-12-19T14:13:22.762Z</lastmod>
+    <loc>https://JunDamin.github.io/recipes4ds/about.html</loc>
+    <lastmod>2023-04-14T05:51:46.744Z</lastmod>
   </url>
   <url>
     <loc>https://JunDamin.github.io/recipes4ds/index.html</loc>
-    <lastmod>2022-12-19T14:13:23.370Z</lastmod>
+    <lastmod>2023-04-14T05:51:48.167Z</lastmod>
   </url>
   <url>
-    <loc>https://JunDamin.github.io/recipes4ds/about.html</loc>
-    <lastmod>2022-12-19T14:13:23.833Z</lastmod>
+    <loc>https://JunDamin.github.io/recipes4ds/posts/000_altair_series_iris/index.html</loc>
+    <lastmod>2023-04-14T05:51:51.547Z</lastmod>
+  </url>
+  <url>
+    <loc>https://JunDamin.github.io/recipes4ds/posts/001_bayesian_approach_for_COVID-19_vaccine_efficacy/index.html</loc>
+    <lastmod>2023-04-14T05:52:05.700Z</lastmod>
+  </url>
+  <url>
+    <loc>https://JunDamin.github.io/recipes4ds/posts/002_how_to_install_python_package_under_offline_enviromnent/index.html</loc>
+    <lastmod>2023-04-14T05:52:06.194Z</lastmod>
+  </url>
+  <url>
+    <loc>https://JunDamin.github.io/recipes4ds/posts/003_javis_retrograde_motion/index.html</loc>
+    <lastmod>2023-04-14T05:52:07.206Z</lastmod>
+  </url>
+  <url>
+    <loc>https://JunDamin.github.io/recipes4ds/posts/004_regression_using_jax/index.html</loc>
+    <lastmod>2023-04-14T05:52:08.208Z</lastmod>
+  </url>
+  <url>
+    <loc>https://JunDamin.github.io/recipes4ds/posts/005_lineplot_following_economist_visual_guide/index.html</loc>
+    <lastmod>2023-04-14T05:52:09.189Z</lastmod>
+  </url>
+  <url>
+    <loc>https://JunDamin.github.io/recipes4ds/posts/006_sir_model_tutorial_using_julia/index.html</loc>
+    <lastmod>2023-04-14T05:52:10.477Z</lastmod>
+  </url>
+  <url>
+    <loc>https://JunDamin.github.io/recipes4ds/posts/007_leos_syndrome/index.html</loc>
+    <lastmod>2023-04-14T05:52:12.581Z</lastmod>
   </url>
 </urlset>
