@@ -6,6 +6,7 @@ categories:
   - setup
   - troubleshooting
   - knowhow
+image: https://cdn.activestate.com/wp-content/uploads/2019/12/how-to-install-pip-on-windows.png
 ---
 
 
