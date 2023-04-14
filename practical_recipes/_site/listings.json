@@ -2,6 +2,7 @@
   {
     "listing": "/index.html",
     "items": [
+      "/posts/000_altair_series_iris/index.html",
       "/posts/007_leos_syndrome/index.html",
       "/posts/006_sir_model_tutorial_using_julia/index.html",
       "/posts/005_lineplot_following_economist_visual_guide/index.html",
