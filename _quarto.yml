@@ -1,0 +1,17 @@
+project:
+  type: website
+
+website:
+  title: "Practical Recipes for Data Science"
+  favicon: images/siamese-cat.png
+  navbar:
+    right:
+      - about.qmd
+      - icon: github
+        href: https://github.com/JunDamin
+format:
+  html:
+    theme: lux
+    css: styles.css
+
+
