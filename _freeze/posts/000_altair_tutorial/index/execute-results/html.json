@@ -1,0 +1,11 @@
+{
+  "hash": "bdbfdc13d2c92de09b1f534c77145f15",
+  "result": {
+    "markdown": "---\ntitle: Altair Tutorial\ndate: 2023-07-03\ncategories:\n  - python\n  - visualization\n  - altair\nimage: \"altair.png\"\n---\n\n# Altair란?\n\n# Altair basic\n\nchart, encode, mark\n\n::: {.cell execution_count=1}\n``` {.python .cell-code}\nimport altair as alt\n\n```\n:::\n\n\n",
+    "supporting": [
+      "index_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}

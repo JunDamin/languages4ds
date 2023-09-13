@@ -1,0 +1,99 @@
+---
+title: "How to use palette in matplotlib"
+author: "Jun Damin"
+date: "2022-11-03"
+categories:
+  - plot
+  - visualization
+  - matplotlib
+  - palette
+draft: true
+---
+
+
+https://towardsdatascience.com/how-to-create-and-use-custom-matplotlib-style-sheet-9393f498063
+
+# how to set custom palette
+
+Color is one of the most important aspect of plot for production. According to 인지과학,  human recognize color first. Therefore in any style guide, they provide their own color combination.
+
+% ref link. 
+
+For example, [Economist Visual Guide](https://design-system.economist.com/documents/CHARTstyleguide_20170505.pdf) provide their choice of colors with table as below.
+
+matplotlib color palette structure
+
+save graph, with different color palette.
+
+```{python}
+import matplotlib.pyplot as plt
+
+color_names = {
+    "ECON RED" : "E3120B",
+    "Black" :  "0C0C0C",
+    "Main" : ["DB444B", "006BA2", "3EBCD2", "379A8B", "EBB434", "B4BA39", "9A607F", "D1B07C"],
+    "Boxes/NAV" : ["758D99", "E9EDF0", "B7C6CF"],
+    "Text": "758D99"
+}
+
+```
+
+```{python}
+def plotColor(name, colors):
+    #  PLOT colors from sorted dataframe
+    color_count = len(colors)
+    if type(colors) == str:
+        color_count = 1
+        colors = [colors]
+    
+    a = 3                     #  number of columns
+    b = int(color_count/a)+1  #  number of rows
+    c = 1                     #  subplot counter  
+    
+    plt.figure(figsize=(a*4,b))
+    
+    for j in colors:
+        plt.subplot(b, a, c)  # row, column, counter
+        plt.axis('off')
+        plt.text(0,0.04, j, color = 'black', fontsize = 18)
+        plt.hlines(0,0,10, color = f"#{j}" ,linestyles = 'solid', linewidth = 30)
+        c = c + 1
+
+    plt.suptitle(name)
+    plt.tight_layout()
+    plt.show()
+
+    return
+
+color_names.items()
+```
+
+```{python}
+def cmap_plot(cmap_list, ctype):
+    cmaps = cmap_list
+
+    n = len(cmaps)
+
+    fig = plt.figure(figsize=(8.25, n*.20), dpi=200)
+    ax = plt.subplot(1, 1, 1, frameon=False, xlim=[0,10], xticks=[], yticks=[])
+    fig.subplots_adjust(top=0.99, bottom=0.01, left=0.18, right=0.99)
+
+    y, dy, pad = 0, 0.3, 0.08
+
+    ticks, labels = [], []
+
+    for cmap in cmaps[::-1]:
+        Z = np.linspace(0,1,512).reshape(1,512)
+        plt.imshow(Z, extent=[0,10,y,y+dy], cmap=plt.get_cmap(cmap))
+        ticks.append(y+dy/2)
+        labels.append(cmap)
+        y = y + dy + pad
+
+    ax.set_ylim(-pad,y)
+    ax.set_yticks(ticks)
+    ax.set_yticklabels(labels)
+
+    ax.tick_params(axis='y', which='both', length=0, labelsize=5)
+    plt.title(f'{ctype} Colormap', fontweight='bold', fontsize=8)
+    plt.show()
+```

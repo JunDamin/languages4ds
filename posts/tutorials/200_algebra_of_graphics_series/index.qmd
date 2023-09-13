@@ -1,0 +1,371 @@
+---
+title: "Tutorial of Algebra of Graphics"
+date: "2023-05-11"
+cagetory:
+  - julia
+  - visualization
+  - tutorial
+jupyter: julia-1.9
+output: true
+warning: false
+code-fold: true
+image: penguins.png
+---
+
+줄리아 언어에 그래픽 옵션 중 Makie(마키에)라는 패키지가 있습니다. 
+파이썬의 matplotlib과 같이 그래픽 엔진과 같은 기능을 가지고 있습니다.
+
+matplotlib에는 seaborn이 있듯이 Makie에는 Algebra of Graphics라는 패키지가 있습니다.
+주로 사용하는 기능을 쉽게 만들 수 있는 기능인데요. grammar of graphics의 영향을 받은 R의 ggplot2와 유사한 기능이 있습니다.
+
+오늘은 그 [튜토리얼](https://aog.makie.org/stable/generated/penguins/)을 같이 살펴 보도록 하겠습니다.
+
+## 팽귄 데이터 셋
+
+오늘 시각화할 데이터 셋은 팽귄 데이터 셋입니다. 
+팽귄 333마리에 대한 관측자료입니다.
+종, 서식지, 부리(bill) 길이, 부리 깊이, 날개(flipper) 길이, 몸무게, 성별 정보를 가지고 있습니다. 
+
+
+```{julia}
+using PalmerPenguins, DataFrames, CSV
+
+penguins = dropmissing(DataFrame(PalmerPenguins.load()))
+first(penguins, 6)
+```
+
+## 숫자 세기
+
+팽귄 수를 세어 봅니다. 
+AoG(Algebra of Graphics)는 * 기호는 적용을, +는 붙이는 기능을 합니다.
+`data()` 함수로 데이터를 가져오고, `frequency()`는 숫자를 셉니다.
+`mapping()`함수는 어떤 기준으로 숫자를 셀지 결정합니다.
+
+마지막으로 `draw` 함수를 통해 출력 합니다.
+
+```{julia}
+
+using AlgebraOfGraphics, CairoMakie
+set_aog_theme!()
+
+axis = (width = 225, height = 225)
+penguin_frequency = data(penguins) * frequency() * mapping(:species)
+
+draw(penguin_frequency; axis = axis)
+
+```
+
+
+### 색 지정 
+
+여기에 색깔을 지정해 봅니다.
+기존에 만든 그래프 `penguin_frequency`에 새로운 항목을 `mapping` 함수를 통해 적용합니다. 
+
+```{julia}
+
+plt = penguin_frequency * mapping(color = :island)
+draw(plt; axis = axis)
+
+```
+
+### 규칙
+
+덧셈과 곱셈 규칙을 지킵니다. 
+
+dodge argument를 통해 병렬로 제시할 수 있습니다.
+
+```{julia}
+plt = penguin_frequency * mapping(color = :island, dodge = :island)
+draw(plt; axis = axis)
+
+```
+
+유사하게 `sex`로 구분할 수도 있습니다.
+
+```{julia}
+plt = penguin_frequency * mapping(color = :island, dodge = :sex)
+draw(plt; axis = axis)
+
+```
+
+`stack`을 지정하면 누적그래프를 볼 수 있습니다. 
+
+```{julia}
+plt = penguin_frequency * mapping(color = :island, stack = :island)
+draw(plt; axis = axis)
+```
+
+`dodge`와 같이 쓰이면 다음과 같습니다.
+
+```{julia}
+plt = penguin_frequency * mapping(color = :island, stack = :island, dodge=:sex)
+draw(plt; axis = axis)
+```
+
+scatter plot은 아래와 같이 만들 수 있습니다.
+
+```{julia}
+penguin_bill = data(penguins) * mapping(:bill_length_mm,:bill_depth_mm)
+draw(penguin_bill; axis = axis)
+```
+
+함수를 통해 변환하고 이름을 반영할 수도 있습니다. 
+
+```{julia}
+penguin_bill = data(penguins) * mapping(
+    :bill_length_mm => (t -> t / 10) => "bill length (cm)",
+    :bill_depth_mm => (t -> t / 10) => "bill depth (cm)",
+)
+draw(penguin_bill; axis = axis)
+```
+
+부리 길이와 깊이에 대한 플롯에 색을 매칭할 수 있습니다.
+
+```{julia}
+plt = penguin_bill * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+선형 회귀를 적용하여 그래픽을 적용할 수 있습니다.
+
+```{julia}
+plt = penguin_bill * linear() * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+
+`+`를 통해 두 그래프를 곂쳐서 출력 할 수 있습니다. 
+
+```{julia}
+plt = penguin_bill * linear() * mapping(color = :species) + penguin_bill * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+
+괄호를 써서 다소 긴 코드를 줄일 수 있습니다. 
+
+```{julia}
+plt = penguin_bill * (linear() + mapping()) * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+또한 아래와 같이 리팩토링도 가능합니다.
+
+
+```{julia}
+layers = linear() + mapping()
+plt = penguin_bill * layers * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+마커를 지정하여 구분할 수 있습니다.
+
+```{julia}
+layers = linear() + mapping(marker = :sex)
+plt = penguin_bill * layers * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+또는 컬럼을 지정할 수도 있습니다.
+
+```{julia}
+layers = linear() + mapping(col = :sex)
+plt = penguin_bill * layers * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+위의 그래프는 같은 피팅 선형 그래프를 보여주고 있습니다.
+데이터와 맞춰서 보여주길 원한다면 아래와 같이 하면 됩니다.
+
+
+```{julia}
+layers = linear() + mapping()
+plt = penguin_bill * layers * mapping(color = :species, col = :sex)
+draw(plt; axis = axis)
+```
+
+## Density plot
+
+밀도 플롯을 그려서 표현 할 수 있습니다.
+
+```{julia}
+using AlgebraOfGraphics: density
+plt = penguin_bill * density(npoints=50) * mapping(col = :species)
+draw(plt; axis = axis)
+```
+
+`visual` 함수를 통해 시각적 효과를 지정할 수 있습니다.
+
+```{julia}
+plt *= visual(colormap = :grayC, colorrange = (0, 6))
+draw(plt; axis = axis)
+```
+
+`Wireframe`을 지정하여 3D 그래프로 표현할 수 있습니다.
+
+```{julia}
+axis = (type = Axis3, width = 300, height = 300)
+layer = density() * visual(Wireframe, linewidth=0.05)
+plt = penguin_bill * layer * mapping(color = :species)
+draw(plt; axis = axis)
+
+```
+
+`Contour`를 구할 수도 있습니다.
+
+
+```{julia}
+axis = (width = 225, height = 225)
+layer = density() * visual(Contour)
+plt = penguin_bill * layer * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+위에 내용을 합쳐서 아래와 같이 그릴 수도 있습니다.
+
+
+```{julia}
+layers = density() * visual(Contour) + linear() + mapping()
+plt = penguin_bill * layers * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+`mapping`대신 `visual` 을 사용하여 특성을 지정할 수 도 있습니다.
+
+
+```{julia}
+layers = density() * visual(Contour) + linear() + visual(alpha = 0.5)
+plt = penguin_bill * layers * mapping(color = :species)
+draw(plt; axis = axis)
+```
+
+색을 사용해서 3개 변수를 표현하기 할 수 있습니다.
+
+```{julia}
+body_mass = :body_mass_g => (t -> t / 1000) => "body mass (kg)"
+layers = linear() * mapping(group = :species) + mapping(color = body_mass, marker = :species)
+plt = penguin_bill * layers
+draw(plt; axis = axis)
+```
+
+혹은 축을 지정하여 3차원으로 표현할 수도 있습니다.
+
+
+```{julia}
+axis = (type = Axis3, width = 300, height = 300)
+plt = penguin_bill * mapping(body_mass, color = :species)
+draw(plt; axis = axis)
+```
+
+레이아웃을 지정하여 구분하여 표현도 가능합니다.
+
+```{julia}
+plt = penguin_bill * mapping(body_mass, color = :species, layout = :sex)
+draw(plt; axis = axis)
+```
+
+## 머신러닝과 같이 사용하기
+
+간단히 Decision Tree 모델을 만들어 봅니다.
+
+```{julia}
+#| eval: false
+using DecisionTree, Random
+
+# use approximately 80% of penguins for training
+Random.seed!(1234) # for reproducibility
+N = nrow(penguins)
+train = fill(false, N)
+perm = randperm(N)
+train_idxs = perm[1:floor(Int, 0.8N)]
+train[train_idxs] .= true
+
+# fit model on training data and make predictions on the whole dataset
+X = hcat(penguins.bill_length_mm, penguins.bill_depth_mm)
+y = penguins.species
+model = DecisionTreeClassifier() # Support-Vector Machine Classifier
+fit!(model, X[train, :], y[train])
+ŷ = predict(model, X)
+
+# incorporate relevant information in the dataset
+penguins.train = train;
+penguins.predicted_species = ŷ;
+
+
+CSV.write("penguins.csv", penguins)
+```
+
+
+결과를 보면 `Chinstrap`종에 대해서 정확도가 낮음을 볼 수 있습니다.
+
+```{julia}
+
+penguins = CSV.read("penguins.csv", DataFrame)
+penguin_bill = data(penguins) * mapping(:bill_length_mm,:bill_depth_mm)
+
+axis = (width = 225, height = 225)
+dataset =:train => renamer(true => "training", false => "testing") => "Dataset"
+accuracy = (:species, :predicted_species) => isequal => "accuracy"
+plt = data(penguins) *
+    expectation() *
+    mapping(:species, accuracy) *
+    mapping(col = dataset)
+draw(plt; axis = axis)
+```
+
+에러율은 아래와 같이 볼 수 있습니다.
+
+```{julia}
+error_rate = (:species, :predicted_species) => !isequal => "error rate"
+plt = data(penguins) *
+    expectation() *
+    mapping(:species, error_rate) *
+    mapping(col = dataset)
+draw(plt; axis = axis)
+```
+
+테스트와 트레이닝 기준으로 아래와 같이 분포를 볼 수 있습니다. 
+
+```{julia}
+prediction = :predicted_species => "predicted species"
+datalayer = mapping(color = prediction, row = :species, col = dataset)
+plt = penguin_bill * datalayer
+draw(plt; axis = axis)
+```
+
+여기에 모델의 pdf를 곂치면 아래와 같습니다.
+
+```{julia}
+pdflayer = density() * visual(Contour) * mapping(group = :species, color=:species)
+layers = pdflayer + datalayer
+plt = penguin_bill * layers
+draw(plt; axis = axis)
+```
+
+
+단색으로 해당되는 확률만 표현할 수도 있습니다.
+
+```{julia}
+
+pdflayer = density() * visual(Contour, colormap=Reverse(:grays)) * mapping(group = :species, row=:species, col = dataset)
+layers = pdflayer + datalayer
+plt = penguin_bill * layers
+draw(plt; axis = axis)
+```
+
+
+전체를 같이 표현할 수도 있습니다. 
+
+```{julia}
+
+pdflayer = density() * visual(Contour, colormap=Reverse(:grays)) * mapping(group = :species)
+layers = pdflayer + datalayer
+plt = penguin_bill * layers
+draw(plt; axis = axis)
+```
+
+
+## 마무리
+
+여러가지 그래프를 손쉽게 결합 생성할 수 있어 전처리가 끝난 자료의 EDA를 진행할 때 굉장히 효과적으로 사용할 수 있을 것으로 판단됩니다.
+또한 몇가지 규칙을 바탕으로 유연하게 확장 가능한 점도 아주 유용한 부분이라고 생각됩니다.

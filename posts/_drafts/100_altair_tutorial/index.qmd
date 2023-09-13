@@ -1,0 +1,24 @@
+---
+title: Altair Tutorial
+date: 2023-07-03
+categories:
+  - python
+  - visualization
+  - altair
+image: "altair.png"
+---
+
+# Altair란?
+
+# Altair basic
+
+chart, encode, mark
+
+
+```{python}
+import altair as alt
+
+alt.Chart
+
+
+```

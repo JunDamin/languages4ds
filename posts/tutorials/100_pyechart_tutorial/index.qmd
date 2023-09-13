@@ -1,0 +1,153 @@
+---
+title: Pyechart Tutorial
+date: 2023-07-03
+categories:
+  - python
+  - visualization
+  - pyechart
+image: "altair.png"
+---
+
+
+```{python}
+from pyecharts.charts import Bar
+
+bar = Bar()
+bar.add_xaxis(["shirts", "cardigans", "chiffons", "trousers", "heels", "socks"])
+bar.add_yaxis("Merchant A", [5, 20, 36, 10, 75, 90])
+bar.render_notebook()
+```
+
+
+```{python}
+from pyecharts import options as opts
+from pyecharts.charts import EffectScatter
+from pyecharts.faker import Faker
+from pyecharts.globals import SymbolType
+
+c = (
+    EffectScatter()
+    .add_xaxis(Faker.values(), )
+    .add_yaxis("", Faker.values(), symbol=SymbolType.ARROW)
+    .set_global_opts(title_opts=opts.TitleOpts(title="EffectScatter"), xaxis_opts=opts.AxisOpts(type_="value"))
+    .render_notebook()
+)
+c
+```
+
+
+
+```{python}
+import pyecharts.options as opts
+from pyecharts.charts import MapGlobe
+from pyecharts.faker import POPULATION
+
+data = [x for _, x in POPULATION[1:]]
+low, high = min(data), max(data)
+
+c = (
+    MapGlobe()
+    .add_schema()
+    .add(
+        maptype="world",
+        series_name="World Population",
+        data_pair=POPULATION[1:],
+        is_map_symbol_show=True,
+        label_opts=opts.LabelOpts(is_show=True),
+    )
+    .set_global_opts(
+        visualmap_opts=opts.VisualMapOpts(
+            min_=low,
+            max_=high,
+            range_text=["max", "min"],
+            is_calculable=True,
+            range_color=["lightskyblue", "yellow", "orangered"],
+        )
+    )
+    .render_notebook()
+)
+c
+```
+
+
+
+```{python}
+from pyecharts import options as opts
+from pyecharts.charts import Bar
+from pyecharts.faker import Faker
+
+c = (
+    Bar()
+    .add_xaxis(Faker.choose())
+    .add_yaxis("商家A", Faker.values())
+    .add_yaxis("商家B", Faker.values())
+    .set_global_opts(
+        title_opts=opts.TitleOpts(title="Bar-显示 ToolBox"),
+        toolbox_opts=opts.ToolboxOpts(),
+        legend_opts=opts.LegendOpts(is_show=False),
+    )
+)
+
+c.render_notebook()
+
+```
+
+
+
+```{python}
+import datetime
+import random
+
+from pyecharts import options as opts
+from pyecharts.charts import Calendar
+
+
+begin = datetime.date(2017, 1, 1)
+end = datetime.date(2017, 12, 31)
+data = [
+    [str(begin + datetime.timedelta(days=i)), random.randint(1000, 25000)]
+    for i in range((end - begin).days + 1)
+]
+
+c = (
+    Calendar()
+    .add("", data, calendar_opts=opts.CalendarOpts(range_="2017", ))
+    .set_global_opts(
+        title_opts=opts.TitleOpts(title="Calendar-2017年微信步数情况"),
+        visualmap_opts=opts.VisualMapOpts(
+            max_=20000,
+            min_=500,
+            orient="horizontal",
+            is_piecewise=True,
+            pos_top="230px",
+            pos_left="100px",
+        ),
+    )
+)
+c.render_notebook()
+```
+
+
+```{python}
+from pyecharts import options as opts
+from pyecharts.charts import Line, Scatter
+from pyecharts.faker import Faker
+
+x = range(10)
+line = (
+    Line()
+    .add_xaxis(x)
+    .add_yaxis("商家A", Faker.values())
+    .add_yaxis("商家B", Faker.values())
+    .set_global_opts(title_opts=opts.TitleOpts(title="Overlap-line+scatter"))
+)
+scatter = (
+    Scatter()
+    .add_xaxis(x)
+    .add_yaxis("商家A", Faker.values())
+    .add_yaxis("商家B", Faker.values())
+)
+line.overlap(scatter)
+line.render("overlap_line_scatter.html")
+line.render_notebook()
+```

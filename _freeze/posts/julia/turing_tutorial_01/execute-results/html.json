@@ -1,0 +1,11 @@
+{
+  "hash": "45c193781c71b5a6411fac47cf5d81b6",
+  "result": {
+    "markdown": "---\ntitle: Introduction To Turing.jl\ndate: '2023-08-21'\ncagetory:\n  - julia\n  - Turing.jl\n  - tutorial\n  - bayesian statistics\noutput: true\nwarning: false\ncode-fold: true\n---\n\n## Turing.jl 이란?\n\n## Turing.jl 의 장점\n\n## 기본 철학\n\n",
+    "supporting": [
+      "turing_tutorial_01_files"
+    ],
+    "filters": [],
+    "includes": {}
+  }
+}
