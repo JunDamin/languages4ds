@@ -223,8 +223,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
 <div class="cell" data-execution_count="1">
-<details>
-<summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Random</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">StatsBase</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DataFrames</span></span>
@@ -243,11 +241,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">groupby</span>(<span class="op">:</span>x)</span>
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">combine</span>(<span class="op">:</span>y <span class="op">=&gt;</span> median, <span class="op">:</span>z <span class="op">=&gt;</span> mean)</span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
 <div class="cell-output cell-output-stdout">
-<pre><code>  309.000 μs (434 allocations: 541.09 KiB)</code></pre>
+<pre><code>  621.500 μs (434 allocations: 541.09 KiB)</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="2">
+<div class="cell-output cell-output-display" data-execution_count="16">
 <div><div style="float: left;"><span>4×3 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
 <table class="data-frame table table-sm table-striped small" data-quarto-postprocess="true">
 <thead>
@@ -345,8 +342,162 @@ bench::mark(
 <p>저는 이것이 Julia 언어의 진정한 게임 체인저라고 생각합니다. 멀티플 디스패치란 인수의 타입에 따라서 함수가 다르게 적용될 수 있도록 정의할 수 있는 기능입니다. 멀티플 디스패치는 함수 또는 메서드가 런타임(동적) 타입 또는 더 일반적인 경우 하나 이상의 인수의 타입에 따라 동적으로 디스패치될 수 있는 기능입니다. 이것은 메서드가 호출된 객체의 타입에 따라 함수 또는 메서드 호출이 동적으로 디스패치되는 단일 디스패치 다형성의 일반화입니다. 멀티플 디스패치는 하나 이상의 인수의 결합된 특성을 사용하여 동적 디스패치를 구현하여 함수 또는 메서드로 라우팅합니다.</p>
 <p>대부분의 언어는 호출할 메서드를 결정하기 위해 메서드의 첫 번째 매개변수에 의존하는 단일 디스패치 다형성을 가지고 있습니다. 하지만 Julia가 다른 점은 여러 매개변수가 고려된다는 것입니다. 이를 통해 동일한 초기 매개변수를 가지는 유사한 함수의 여러 정의가 가능합니다. 저는 이것이 Julia의 제작자 중 한 명인 Stefan Karpinski가 JuliaCon 2019에서 가장 잘 설명했다고 생각합니다(아래 비디오 참조):</p>
 <div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/kc9HwsxE1OY" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div>
+<section id="멀티플-디스패치-따라해보기-개와-고양이" class="level3">
+<h3 class="anchored" data-anchor-id="멀티플-디스패치-따라해보기-개와-고양이">멀티플 디스패치 따라해보기 : 개와 고양이</h3>
+<p>Karpinski의 예시를 재현하겠습니다. 이 강연에서 Karpinski는 객체 지향 프로그래밍(OOP)에서 매우 일반적인 클래스의 구조를 설계합니다. Julia에서는 클래스가 없지만 “구조화된 데이터”를 의미하는 구조(<code>struct</code>)가 있습니다. <code>struct</code>는 변수만 갖지고 있는 클래스와 사실상 같습니다. 즉, 필드 세트(다른 언어에서는 “속성”이라고도 함)를 정의하면 됩니다. 그런 다음 구조에 의해 정의된 필드에 대한 고유한 특정 값을 가진 개별 인스턴스(또는 “객체”)를 생성할 수 있습니다.</p>
+<p><code>Pet</code>이라는 추상 타입을 만듭니다. 그런 다음 <code>Pet</code>에서 하나의 필드 이름(<code>String</code>)을 가진 두 개의 파생 구조를 생성합니다. 이 파생 구조는 개와 고양이입니다. 또한 “만남”에서 발생하는 일에 대한 몇 가지 메서드를 정의합니다. 이는 Julia가 런타임에 다중 디스패치하여 한 유형의 <code>Pet</code>이 다른 <code>Pet</code>을 만날 때 취하는 동작을 정의하는 일반 함수 <code>meets()</code>와 <code>meets()</code>의 여러 특정 메서드를 정의합니다.</p>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 추상 타입을 정의</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">abstract type</span> Pet <span class="kw">end</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Dog 타입 정의</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Dog <span class="op">&lt;:</span><span class="dt"> Pet</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    name<span class="op">::</span><span class="dt">String</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Cat 타입 정의</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> Cat <span class="op">&lt;:</span><span class="dt"> Pet</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    name<span class="op">::</span><span class="dt">String</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 두 Pet 타입이 만났을 때 인터랙션을 정의</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">encounter</span>(a<span class="op">::</span><span class="dt">Pet</span>, b<span class="op">::</span><span class="dt">Pet</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    verb <span class="op">=</span> <span class="fu">meets</span>(a, b)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fu">println</span>(<span class="st">"</span><span class="sc">$</span>(a.name)<span class="st"> meets </span><span class="sc">$</span>(b.name)<span class="st"> and </span><span class="sc">$</span>verb<span class="st">"</span>)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 각 타입별로 같은 이름의 함수를 정의</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="fu">meets</span>(a<span class="op">::</span><span class="dt">Dog</span>, b<span class="op">::</span><span class="dt">Dog</span>) <span class="op">=</span> <span class="st">"sniffs"</span>;</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">meets</span>(a<span class="op">::</span><span class="dt">Dog</span>, b<span class="op">::</span><span class="dt">Cat</span>) <span class="op">=</span> <span class="st">"chases"</span>;</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="fu">meets</span>(a<span class="op">::</span><span class="dt">Cat</span>, b<span class="op">::</span><span class="dt">Dog</span>) <span class="op">=</span> <span class="st">"hisses"</span>;</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="fu">meets</span>(a<span class="op">::</span><span class="dt">Cat</span>, b<span class="op">::</span><span class="dt">Cat</span>) <span class="op">=</span> <span class="st">"slinks"</span>;</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>이제 객체를 생성하고 Julia에서 만나게(<code>encounter</code>)했을 때를 살펴 봅시다.</p>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fido <span class="op">=</span> <span class="fu">Dog</span>(<span class="st">"Fido"</span>);</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>rex <span class="op">=</span> <span class="fu">Dog</span>(<span class="st">"Rex"</span>);</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>whiskers <span class="op">=</span> <span class="fu">Cat</span>(<span class="st">"Whiskers"</span>);</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>spots <span class="op">=</span> <span class="fu">Cat</span>(<span class="st">"Spots"</span>);</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">encounter</span>(fido, rex)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">encounter</span>(rex, whiskers)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">encounter</span>(spots, fido)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">encounter</span>(whiskers, spots)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Fido meets Rex and sniffs
+Rex meets Whiskers and chases
+Spots meets Fido and hisses
+Whiskers meets Spots and slinks</code></pre>
+</div>
+</div>
+</section>
+<section id="예시-원-핫-벡터" class="level3">
+<h3 class="anchored" data-anchor-id="예시-원-핫-벡터">예시: 원-핫 벡터</h3>
+<p>또 다른 좋은 예로 one-hot 벡터로 변환해 보겠습니다. 원-핫 벡터는 단 하나의 값을 제외한 모든 값이 0(0)인 정수 벡터를 의미합니다. 머신 러닝에서 one-hot 인코딩은 범주형 데이터를 처리하는 데 자주 사용되는 방법입니다. 많은 머신 러닝 모델은 입력 변수를 숫자로 변환해야 하기 때문에 범주형 변수를 one-hot 인코딩(변환)을 해야 합니다. 아래 예제는 <a href="https://habr.com/ru/post/468609/">Vasily Pisarev의 게시물</a>에서 크게 영감을 받았습니다.</p>
+<p>Julia에서 원-핫 벡터를 어떻게 표현할까요? 간단합니다. <code>struct</code> 키워드를 사용하여 Julia에 <code>OneHotVector</code>를 새로운 타입으로 만들고 <code>OneHotVector</code> 길이와 인덱스를 나타내는 두 필드 <code>len</code>과 <code>ind</code>를 정의합니다. 그런 다음 새로 정의된 <code>OneHotVector</code>에 대한 <code>Base</code> 함수 <code>size()</code> 및 <code>getindex()</code>에 대한 새로운 메서드를 정의합니다.</p>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Base</span>: size, getindex</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">struct</span> OneHotVector <span class="op">&lt;:</span><span class="dt"> AbstractVector{Int}</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    len<span class="op">::</span><span class="dt">Int</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    ind<span class="op">::</span><span class="dt">Int</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">size</span>(v<span class="op">::</span><span class="dt">OneHotVector</span>) <span class="op">=</span> (v.len,)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">getindex</span>(v<span class="op">::</span><span class="dt">OneHotVector</span>, i<span class="op">::</span><span class="dt">Integer</span>) <span class="op">=</span> <span class="fu">Int</span>(i <span class="op">==</span> v.ind)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>getindex (generic function with 553 methods)</code></pre>
+</div>
+</div>
+<p><code>OneHotVector</code>가 <code>AbstractVector</code>의 하위 범주에 속하는 <code>struct</code>이기 때문에, 우리는 <code>AbstractVector</code>에서 정의된 모든 메소드를 사용할 수 있습니다. <code>Array</code>의 리스트 컴프리헨션을 아래와 같이 사용할 수 있습니다.</p>
+<div class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>onehot <span class="op">=</span> [<span class="fu">OneHotVector</span>(<span class="fl">3</span>, <span class="fu">rand</span>(<span class="fl">1</span><span class="op">:</span><span class="fl">3</span>)) for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>4-element Vector{OneHotVector}:
+ [1, 0, 0]
+ [0, 0, 1]
+ [1, 0, 0]
+ [1, 0, 0]</code></pre>
+</div>
+</div>
+<p>이제 내적의 합을 나타내는 새로운 함수 <code>inner_sum()</code>을 정의합니다. 여기서 <code>A</code>는 행렬 같은 것입니다(비록 제가 유형을 나타내지 않았지만 이름만으로 무언가를 추측할 수 있습니다). 그리고 <code>vs</code>는 일부 벡터와 같은 요소의 벡터입니다. 이 함수는 “행렬”의 내적을 <code>vs</code>의 모든 벡터와 같은 요소와 취하여 누적된 값을 반환합니다. 이것은 모든 유형을 지정하지 않고 주어진 일반적인 정의입니다. 여기서 일반 프로그래밍은 루프에서 이 함수 호출 <code>inner()</code>로 구성됩니다.</p>
+<div class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">LinearAlgebra</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">inner_sum</span>(A, vs)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    t <span class="op">=</span> <span class="fu">zero</span>(<span class="fu">eltype</span>(A))</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> v <span class="kw">in</span> vs</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        t <span class="op">+=</span> <span class="fu">inner</span>(v, A, v) <span class="co"># multiple dispatch!</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> t</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">inner</span>(v, A, w) <span class="op">=</span> <span class="fu">dot</span>(v, A <span class="op">*</span> w) <span class="co"># very general definition</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<pre><code>inner (generic function with 2 methods)</code></pre>
+</div>
+</div>
+<p>이제 시험해 봅니다.</p>
+<div class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="fu">rand</span>(<span class="fl">3</span>, <span class="fl">3</span>)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>vs <span class="op">=</span> [<span class="fu">rand</span>(<span class="fl">3</span>) for _ <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">4</span>]</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_sum</span>(A, vs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>4.8754941691753615</code></pre>
+</div>
+</div>
+<p><code>OneHotVector</code>는 <code>AbstractVector</code>의 하위 타입이기 때문에 우리는 <code>innter_sum</code>을 사용할 수 있습니다.</p>
+<div class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">supertype</span>(OneHotVector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div class="ansi-escaped-output">
+<pre>AbstractVector{Int64}<span class="ansi-bright-black-fg"> (alias for </span><span class="ansi-bright-black-fg">AbstractArray{Int64, 1}</span><span class="ansi-bright-black-fg">)</span></pre>
+</div>
+</div>
+</div>
+<div class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">inner_sum</span>(A, onehot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<pre><code>1.7945240316111342</code></pre>
+</div>
+</div>
+<p>하지만 이렇게 정의하는 방식은 다소 느립니다.</p>
+<div class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">BenchmarkTools</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">inner_sum</span>(<span class="op">$</span>A, <span class="op">$</span>onehot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  8.108 ns (0 allocations: 0 bytes)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<pre><code>1.7945240316111342</code></pre>
+</div>
+</div>
+<p>우리는 이 절차를 상당히 최적화 할 수 있습니다. 자 <code>OneHotVector</code>에 의한 행렬 곱을 단순한 컬럼 선택으로 재정의 해봅시다. 우리는 Julia <code>Base</code>의 <code>*</code>함수의 새로운 메소드를 정의함으로 이를 할 수 있습니다.</p>
+<div class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> <span class="bu">Base</span>: *</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">*</span>(A<span class="op">::</span><span class="dt">AbstractMatrix</span>, v<span class="op">::</span><span class="dt">OneHotVector</span>) <span class="op">=</span> A[<span class="op">:</span>, v.ind]</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">inner</span>(v<span class="op">::</span><span class="dt">OneHotVector</span>, A, w<span class="op">::</span><span class="dt">OneHotVector</span>) <span class="op">=</span> A[v.ind, w.ind]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>inner (generic function with 2 methods)</code></pre>
+</div>
+</div>
+<p>이게 다입니다. 아주 간단하죠? 그럼 벤치마킹을 해봅시다.</p>
+<div class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="pp">@btime</span> <span class="fu">inner_sum</span>(<span class="op">$</span>A, <span class="op">$</span>onehot)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  8.108 ns (0 allocations: 0 bytes)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<pre><code>1.7945240316111342</code></pre>
+</div>
+</div>
+<p>엄청난 속도 향상입니다!🚀</p>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

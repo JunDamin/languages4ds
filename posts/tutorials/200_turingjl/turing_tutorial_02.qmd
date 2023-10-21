@@ -9,7 +9,8 @@ cagetory:
 jupyter: julia-1.9
 output: true
 warning: false
-code-fold: true
+code-fold: false
+draft: true
 ---
 
 ## 프로젝트 소개
@@ -218,3 +219,96 @@ encounter(spots, fido)
 encounter(whiskers, spots)
 ```
 
+### 예시: 원-핫 벡터
+
+또 다른 좋은 예로 one-hot 벡터로 변환해 보겠습니다. 원-핫 벡터는 단 하나의 값을 제외한 모든 값이 0(0)인 정수 벡터를 의미합니다. 머신 러닝에서 one-hot 인코딩은 범주형 데이터를 처리하는 데 자주 사용되는 방법입니다. 많은 머신 러닝 모델은 입력 변수를 숫자로 변환해야 하기 때문에 범주형 변수를 one-hot 인코딩(변환)을 해야 합니다. 아래 예제는 [Vasily Pisarev의 게시물](https://habr.com/ru/post/468609/)에서 크게 영감을 받았습니다.
+
+Julia에서 원-핫 벡터를 어떻게 표현할까요? 간단합니다. `struct` 키워드를 사용하여 Julia에  `OneHotVector`를 새로운 타입으로 만들고 `OneHotVector` 길이와 인덱스를 나타내는 두 필드 `len`과 `ind`를 정의합니다. 그런 다음 새로 정의된 `OneHotVector`에 대한 `Base` 함수 `size()` 및 `getindex()`에 대한 새로운 메서드를 정의합니다.
+
+
+```{julia}
+import Base: size, getindex
+
+struct OneHotVector <: AbstractVector{Int}
+    len::Int
+    ind::Int
+end
+
+size(v::OneHotVector) = (v.len,)
+
+getindex(v::OneHotVector, i::Integer) = Int(i == v.ind)
+```
+
+`OneHotVector`가 `AbstractVector`의 하위 범주에 속하는 `struct`이기 때문에, 우리는 `AbstractVector`에서 정의된 모든 메소드를 사용할 수 있습니다. `Array`의 리스트 컴프리헨션을 아래와 같이 사용할 수 있습니다.
+
+
+```{julia}
+onehot = [OneHotVector(3, rand(1:3)) for _ in 1:4]
+```
+
+이제 내적의 합을 나타내는 새로운 함수 `inner_sum()`을 정의합니다. 여기서 `A`는 행렬 같은 것입니다(비록 제가 유형을 나타내지 않았지만 이름만으로 무언가를 추측할 수 있습니다). 그리고 `vs`는 일부 벡터와 같은 요소의 벡터입니다. 이 함수는 "행렬"의 내적을 `vs`의 모든 벡터와 같은 요소와 취하여 누적된 값을 반환합니다. 이것은 모든 유형을 지정하지 않고 주어진 일반적인 정의입니다. 여기서 일반 프로그래밍은 루프에서 이 함수 호출 `inner()`로 구성됩니다.
+
+
+```{julia}
+using LinearAlgebra
+
+function inner_sum(A, vs)
+    t = zero(eltype(A))
+    for v in vs
+        t += inner(v, A, v) # multiple dispatch!
+    end
+    return t
+end
+
+inner(v, A, w) = dot(v, A * w) # very general definition
+```
+
+이제 시험해 봅니다.
+
+
+```{julia}
+A = rand(3, 3)
+vs = [rand(3) for _ in 1:4]
+inner_sum(A, vs)
+```
+
+`OneHotVector`는 `AbstractVector`의 하위 타입이기 때문에 우리는 `innter_sum`을 사용할 수 있습니다.
+
+
+```{julia}
+supertype(OneHotVector)
+```
+
+
+```{julia}
+inner_sum(A, onehot)
+```
+
+하지만 이렇게 정의하는 방식은 다소 느립니다.
+
+
+```{julia}
+using BenchmarkTools
+
+@btime inner_sum($A, $onehot)
+```
+
+우리는 이 절차를 상당히 최적화 할 수 있습니다. 자 `OneHotVector`에 의한 행렬 곱을 단순한 컬럼 선택으로 재정의 해봅시다.
+우리는 Julia `Base`의 `*`함수의 새로운 메소드를 정의함으로 이를 할 수 있습니다. 
+
+
+```{julia}
+import Base: *
+
+*(A::AbstractMatrix, v::OneHotVector) = A[:, v.ind]
+inner(v::OneHotVector, A, w::OneHotVector) = A[v.ind, w.ind]
+```
+
+이게 다입니다. 아주 간단하죠? 그럼 벤치마킹을 해봅시다.
+
+
+```{julia}
+@btime inner_sum($A, $onehot)
+```
+
+엄청난 속도 향상입니다!🚀

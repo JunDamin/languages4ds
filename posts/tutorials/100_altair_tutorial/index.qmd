@@ -6,6 +6,7 @@ categories:
   - visualization
   - altair
 image: "altair.png"
+draft: true
 ---
 
 # Altair란?

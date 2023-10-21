@@ -12,6 +12,7 @@ output: true
 warning: false
 code-fold: true
 image: bayesian_differential_equation.png
+draft: true
 ---
 
 
