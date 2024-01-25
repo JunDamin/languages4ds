@@ -5,7 +5,8 @@ categories:
   - python
   - visualization
   - pyechart
-image: "altair.png"
+execute:
+  eval: false
 ---
 
 
@@ -148,6 +149,6 @@ scatter = (
     .add_yaxis("商家B", Faker.values())
 )
 line.overlap(scatter)
-line.render("overlap_line_scatter.html")
+line.render("../html/overlap_line_scatter.html")
 line.render_notebook()
 ```

@@ -9,7 +9,9 @@ cagetory:
 output: true
 warning: false
 code-fold: true
-image: iris.png
+image: ../images/iris.png
+execute:
+  eval: false
 ---
 
 

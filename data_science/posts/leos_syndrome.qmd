@@ -7,7 +7,7 @@ categories:
   - makie
 execute: 
   enabled: false
-image: "leo.png"
+image: "../images/leo.png"
 ---
 
 

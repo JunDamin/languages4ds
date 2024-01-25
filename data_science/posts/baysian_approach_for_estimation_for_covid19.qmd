@@ -1,14 +1,16 @@
 ---
 title: COVID-19 백신 효과 측정을 위한 베이지안 접근
 date: 2021-09-25
+draft: true
 categories:
   - python
   - bayesian
   - statistics
   - vaccine efficacy
-image: "efficacy.png"
+image: "../images/efficacy.png"
 execute: 
    eval: false
+   
 ---
 
 ## 질문의 시작: 백신의 성능은 어떻게 측정한 걸까?

@@ -6,7 +6,9 @@ categories:
   - plot
   - visualization
   - matplotlib
-image: "life_exp.png"
+image: "../images/life_exp.png"
+execute:
+  eval: false
 ---
 
 Economist는 영국에서 발간하는 경제 주간지로 전세계에 일어나고 있는 뉴스를 전달합니다.

@@ -5,8 +5,10 @@ categories:
   - python
   - visualization
   - altair
-image: "altair.png"
+image: "../images/altair.png"
 draft: true
+execute:
+  eval: false
 ---
 
 # Altair란?

@@ -6,17 +6,18 @@ cagetory:
   - bayesian
   - statistics
   - tutorial
-jupyter: julia-1.9
 output: true
 warning: false
 code-fold: true
-image: sir_model.png
+image: ../images/sir_model.png
 draft: true
+execute:
+  eval: false
 ---
 
 ## 데이터 준비하기
 
-이제 
+이제
 
 ```{julia}
 
@@ -34,18 +35,13 @@ end
 
 ```
 
-
-
 ```{julia}
 first(kor, 5)
 ```
 
-
-
 ```{julia}
 last(kor, 5)
 ```
-
 
 ```{julia}
 using Plots, StatsPlots, LaTeXStrings
@@ -57,7 +53,6 @@ using Plots, StatsPlots, LaTeXStrings
     label=false)
 ```
 
-
 ```{julia}
 function NegativeBinomial2(μ, phi)
     p = 1 / (1 + μ / phi)
@@ -66,8 +61,6 @@ function NegativeBinomial2(μ, phi)
     return NegativeBinomial(r, p)
 end
 ```
-
-
 
 ```{julia}
 using DifferentialEquations
@@ -86,6 +79,7 @@ function sir_ode!(du, u, p, t)
     nothing
 end;
 ```
+
 ```{julia}
 using Turing
 using LazyArrays
@@ -122,8 +116,6 @@ seed!(123)
     infected ~ arraydist(LazyArray(@~ NegativeBinomial2.(sol_, phi)))
 end
 ```
-
-
 
 ```{julia}
 #| eval: false

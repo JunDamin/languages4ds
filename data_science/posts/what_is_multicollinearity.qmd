@@ -1,5 +1,7 @@
 ---
 draft: true
+execute:
+  eval: false
 ---
 
 ## 다중공선성이 왜 문제일까?

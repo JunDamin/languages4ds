@@ -10,6 +10,8 @@ jupyter: julia-1.9
 output: true
 warning: false
 code-fold: true
+execute: 
+  eval: false
 ---
 
 ## 프로젝트 소개

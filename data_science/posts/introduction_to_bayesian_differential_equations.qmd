@@ -11,8 +11,9 @@ jupyter: julia-1.9
 output: true
 warning: false
 code-fold: true
-image: bayesian_differential_equation.png
-draft: true
+image: ../images/bayesian_differential_equation.png
+execute:
+   eval: false
 ---
 
 

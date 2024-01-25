@@ -108,4 +108,4 @@ pathname="retrograde_motion.gif"
 )
 ```
 
-![역행운동](retrograde_motion.gif)
+![역행운동](../images/retrograde_motion.gif)

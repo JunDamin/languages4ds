@@ -1,14 +1,32 @@
 ---
-title: "업무를 위한 데이터 과학 레시피"
 listing:
-  contents: posts
-  sort: "date desc"
+  id: landing-posts
+  contents: data_science/posts
   type: default
+  max-items: 3
+  sort: 
+    - "date desc"
+    - "title asc"
   categories: true
-  sort-ui: false
-  filter-ui: false
+  sort-ui: true 
+  filter-ui: true
 page-layout: full
 title-block-banner: true
+about:
+  id: about-codapanda
+  image: images/profile.jpeg
+  template: jolla
+  image-shape: round
+  links:
+    - icon: github
+      text: "{{< animate fadeIn 'GitHub' >}}"
+      href: https://github.com/JunDamin
 ---
 
+:::{#about-codapanda .animate__animated .animate__zoomInDown} 
 
+안녕하세요. 업무를 위한 데이터 과학 레시피를 작성하는 코다판다입니다. 
+:::
+
+:::{#landing-posts .animate__animated .animate__fadeIn .animate__faster .animate__delay-1s}
+:::

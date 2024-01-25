@@ -11,6 +11,8 @@ warning: false
 code-fold: true
 image: 
 draft: true
+execute:
+  eval: false
 ---
 
 [7 simple habits of the top 1% of engineers](https://engineercodex.substack.com/p/7-simple-habits-of-the-top-1-of-engineers?utm_source=Nomad+Academy&utm_campaign=eb779be7ba-EMAIL_CAMPAIGN_2023_09_15&utm_medium=email&utm_term=0_4313d957c9-eb779be7ba-156515609&mc_cid=eb779be7ba)라는 글을 보았습니다.

@@ -2,6 +2,7 @@
 title: "About"
 image: images/profile.jpeg
 about:
+  id: about-codapanda
   template: jolla
   links:
     - icon: github

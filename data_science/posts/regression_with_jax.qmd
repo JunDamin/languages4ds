@@ -6,7 +6,9 @@ categories:
   - jax
   - regression
   - tutorial
-image: regression.png
+image: ../images/regression.png
+execute:
+  eval: false
 ---
 
 ### 설치하기

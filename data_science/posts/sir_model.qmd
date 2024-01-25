@@ -6,11 +6,12 @@ cagetory:
   - bayesian
   - statistics
   - tutorial
-jupyter: julia-1.9
 output: true
 warning: false
 code-fold: true
-image: images/sir_model.png
+image: ../images/sir_model.png
+execute:
+  eval: false
 ---
 
 코로나19로 인해 감염병 모델링에 대한 관심이 높아졌습니다. 

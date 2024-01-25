@@ -8,6 +8,8 @@ categories:
   - matplotlib
   - palette
 draft: true
+execute:
+  eval: false
 ---
 
 
