@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://JunDamin.github.io/recipes4ds/index.html</loc>
-    <lastmod>2024-01-25T16:20:01.533Z</lastmod>
+    <lastmod>2024-01-28T18:16:46.197Z</lastmod>
   </url>
   <url>
     <loc>https://JunDamin.github.io/recipes4ds/data_science/posts/retrospect_model.html</loc>
@@ -22,15 +22,19 @@
   </url>
   <url>
     <loc>https://JunDamin.github.io/recipes4ds/data_science/posts/economist_style_with_matplotlib.html</loc>
-    <lastmod>2024-01-24T02:19:00.925Z</lastmod>
+    <lastmod>2024-02-01T20:52:33.122Z</lastmod>
   </url>
   <url>
     <loc>https://JunDamin.github.io/recipes4ds/data_science/posts/AoG_tutorial_01.html</loc>
-    <lastmod>2024-01-24T02:25:35.630Z</lastmod>
+    <lastmod>2024-02-01T21:17:33.117Z</lastmod>
   </url>
   <url>
     <loc>https://JunDamin.github.io/recipes4ds/about.html</loc>
     <lastmod>2024-01-24T05:35:47.647Z</lastmod>
+  </url>
+  <url>
+    <loc>https://JunDamin.github.io/recipes4ds/data_science/posts/ADP_01.html</loc>
+    <lastmod>2024-02-04T15:54:21.536Z</lastmod>
   </url>
   <url>
     <loc>https://JunDamin.github.io/recipes4ds/data_science/posts/leos_syndrome.html</loc>

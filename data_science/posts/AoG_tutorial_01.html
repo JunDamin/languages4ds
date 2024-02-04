@@ -58,7 +58,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="../../site_libs/quarto-nav/headroom.min.js"></script>
 <script src="../../site_libs/clipboard/clipboard.min.js"></script>
 <script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
@@ -102,6 +102,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -180,7 +183,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="팽귄-데이터-셋" class="level2">
 <h2 class="anchored" data-anchor-id="팽귄-데이터-셋">팽귄 데이터 셋</h2>
 <p>오늘 시각화할 데이터 셋은 팽귄 데이터 셋입니다. 팽귄 333마리에 대한 관측자료입니다. 종, 서식지, 부리(bill) 길이, 부리 깊이, 날개(flipper) 길이, 몸무게, 성별 정보를 가지고 있습니다.</p>
-<div id="d078133f" class="cell" data-execution_count="1">
+<div id="03b7ebbf" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">PalmerPenguins</span>, <span class="bu">DataFrames</span>, <span class="bu">CSV</span></span>
@@ -188,13 +191,103 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> <span class="fu">dropmissing</span>(<span class="fu">DataFrame</span>(PalmerPenguins.<span class="fu">load</span>()))</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">first</span>(penguins, <span class="fl">6</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<div><div style="float: left;"><span>6×7 DataFrame</span></div><div style="clear: both;"></div></div><div class="data-frame" style="overflow-x: scroll;">
+<table class="data-frame table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;">Row</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">species</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">island</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">bill_length_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">bill_depth_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">flipper_length_mm</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">body_mass_g</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">sex</th>
+</tr>
+<tr class="odd subheader headerLastRow">
+<th class="rowNumber" data-quarto-table-cell-role="th" style="text-align: right; font-weight: bold;"></th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String15">String15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String15">String15</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Float64">Float64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="Int64">Int64</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th" title="String7">String7</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">1</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.1</td>
+<td style="text-align: right;">18.7</td>
+<td style="text-align: right;">181</td>
+<td style="text-align: right;">3750</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">2</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.5</td>
+<td style="text-align: right;">17.4</td>
+<td style="text-align: right;">186</td>
+<td style="text-align: right;">3800</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">3</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">40.3</td>
+<td style="text-align: right;">18.0</td>
+<td style="text-align: right;">195</td>
+<td style="text-align: right;">3250</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">4</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">36.7</td>
+<td style="text-align: right;">19.3</td>
+<td style="text-align: right;">193</td>
+<td style="text-align: right;">3450</td>
+<td style="text-align: left;">female</td>
+</tr>
+<tr class="odd">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">5</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">39.3</td>
+<td style="text-align: right;">20.6</td>
+<td style="text-align: right;">190</td>
+<td style="text-align: right;">3650</td>
+<td style="text-align: left;">male</td>
+</tr>
+<tr class="even">
+<td class="rowNumber" style="text-align: right; font-weight: bold;">6</td>
+<td style="text-align: left;">Adelie</td>
+<td style="text-align: left;">Torgersen</td>
+<td style="text-align: right;">38.9</td>
+<td style="text-align: right;">17.8</td>
+<td style="text-align: right;">181</td>
+<td style="text-align: right;">3625</td>
+<td style="text-align: left;">female</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </section>
 <section id="숫자-세기" class="level2">
 <h2 class="anchored" data-anchor-id="숫자-세기">숫자 세기</h2>
 <p>팽귄 수를 세어 봅니다. AoG(Algebra of Graphics)는 * 기호는 적용을, +는 붙이는 기능을 합니다. <code>data()</code> 함수로 데이터를 가져오고, <code>frequency()</code>는 숫자를 셉니다. <code>mapping()</code>함수는 어떤 기준으로 숫자를 셀지 결정합니다.</p>
 <p>마지막으로 <code>draw</code> 함수를 통해 출력 합니다.</p>
-<div id="ab0cba47" class="cell" data-execution_count="2">
+<div id="d3b8bfd0" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">AlgebraOfGraphics</span>, <span class="bu">CairoMakie</span></span>
@@ -205,63 +298,112 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(penguin_frequency; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="3">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-3-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <section id="색-지정" class="level3">
 <h3 class="anchored" data-anchor-id="색-지정">색 지정</h3>
 <p>여기에 색깔을 지정해 봅니다. 기존에 만든 그래프 <code>penguin_frequency</code>에 새로운 항목을 <code>mapping</code> 함수를 통해 적용합니다.</p>
-<div id="7bf732bf" class="cell" data-execution_count="3">
+<div id="34ba8b73" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_frequency <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>island)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-4-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="규칙" class="level3">
 <h3 class="anchored" data-anchor-id="규칙">규칙</h3>
 <p>덧셈과 곱셈 규칙을 지킵니다.</p>
 <p>dodge argument를 통해 병렬로 제시할 수 있습니다.</p>
-<div id="3a22ccc8" class="cell" data-execution_count="4">
+<div id="43bc5e3c" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_frequency <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>island, dodge <span class="op">=</span> <span class="op">:</span>island)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-5-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>유사하게 <code>sex</code>로 구분할 수도 있습니다.</p>
-<div id="db674bf3" class="cell" data-execution_count="5">
+<div id="dbe8a8ca" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_frequency <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>island, dodge <span class="op">=</span> <span class="op">:</span>sex)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-6-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p><code>stack</code>을 지정하면 누적그래프를 볼 수 있습니다.</p>
-<div id="cb0a99ab" class="cell" data-execution_count="6">
+<div id="6943d2f1" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_frequency <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>island, stack <span class="op">=</span> <span class="op">:</span>island)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-7-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p><code>dodge</code>와 같이 쓰이면 다음과 같습니다.</p>
-<div id="178d6c7a" class="cell" data-execution_count="7">
+<div id="4ecd525e" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_frequency <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>island, stack <span class="op">=</span> <span class="op">:</span>island, dodge<span class="op">=:</span>sex)</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-8-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>scatter plot은 아래와 같이 만들 수 있습니다.</p>
-<div id="dd9b5701" class="cell" data-execution_count="8">
+<div id="cb762e2e" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>penguin_bill <span class="op">=</span> <span class="fu">data</span>(penguins) <span class="op">*</span> <span class="fu">mapping</span>(<span class="op">:</span>bill_length_mm,<span class="op">:</span>bill_depth_mm)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(penguin_bill; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-9-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>함수를 통해 변환하고 이름을 반영할 수도 있습니다.</p>
-<div id="7b6bb3d5" class="cell" data-execution_count="9">
+<div id="9a568417" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>penguin_bill <span class="op">=</span> <span class="fu">data</span>(penguins) <span class="op">*</span> <span class="fu">mapping</span>(</span>
@@ -270,98 +412,175 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(penguin_bill; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-10-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>부리 길이와 깊이에 대한 플롯에 색을 매칭할 수 있습니다.</p>
-<div id="214574a3" class="cell" data-execution_count="10">
+<div id="be8bcb28" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-11-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>선형 회귀를 적용하여 그래픽을 적용할 수 있습니다.</p>
-<div id="2ebee296" class="cell" data-execution_count="11">
+<div id="a98d46df" class="cell" data-execution_count="11">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> <span class="fu">linear</span>() <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-12-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p><code>+</code>를 통해 두 그래프를 곂쳐서 출력 할 수 있습니다.</p>
-<div id="0b957932" class="cell" data-execution_count="12">
+<div id="0da7c6fd" class="cell" data-execution_count="12">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> <span class="fu">linear</span>() <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species) <span class="op">+</span> penguin_bill <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-13-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>괄호를 써서 다소 긴 코드를 줄일 수 있습니다.</p>
-<div id="cd5eed79" class="cell" data-execution_count="13">
+<div id="385782bb" class="cell" data-execution_count="13">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> (<span class="fu">linear</span>() <span class="op">+</span> <span class="fu">mapping</span>()) <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-14-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>또한 아래와 같이 리팩토링도 가능합니다.</p>
-<div id="9fabf56b" class="cell" data-execution_count="14">
+<div id="27ce7962" class="cell" data-execution_count="14">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> <span class="fu">linear</span>() <span class="op">+</span> <span class="fu">mapping</span>()</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-15-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>마커를 지정하여 구분할 수 있습니다.</p>
-<div id="e2972cf4" class="cell" data-execution_count="15">
+<div id="a3ef9d6e" class="cell" data-execution_count="15">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> <span class="fu">linear</span>() <span class="op">+</span> <span class="fu">mapping</span>(marker <span class="op">=</span> <span class="op">:</span>sex)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-16-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>또는 컬럼을 지정할 수도 있습니다.</p>
-<div id="5c6fcacf" class="cell" data-execution_count="16">
+<div id="10870333" class="cell" data-execution_count="16">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> <span class="fu">linear</span>() <span class="op">+</span> <span class="fu">mapping</span>(col <span class="op">=</span> <span class="op">:</span>sex)</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-17-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>위의 그래프는 같은 피팅 선형 그래프를 보여주고 있습니다. 데이터와 맞춰서 보여주길 원한다면 아래와 같이 하면 됩니다.</p>
-<div id="324596b2" class="cell" data-execution_count="17">
+<div id="7083e4bd" class="cell" data-execution_count="17">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> <span class="fu">linear</span>() <span class="op">+</span> <span class="fu">mapping</span>()</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species, col <span class="op">=</span> <span class="op">:</span>sex)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-18-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 </section>
 <section id="density-plot" class="level2">
 <h2 class="anchored" data-anchor-id="density-plot">Density plot</h2>
 <p>밀도 플롯을 그려서 표현 할 수 있습니다.</p>
-<div id="108eeb0f" class="cell" data-execution_count="18">
+<div id="f7b8c285" class="cell" data-execution_count="18">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">AlgebraOfGraphics</span>: density</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> <span class="fu">density</span>(npoints<span class="op">=</span><span class="fl">50</span>) <span class="op">*</span> <span class="fu">mapping</span>(col <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-19-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p><code>visual</code> 함수를 통해 시각적 효과를 지정할 수 있습니다.</p>
-<div id="af1bcf20" class="cell" data-execution_count="19">
+<div id="fdc27130" class="cell" data-execution_count="19">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">*=</span> <span class="fu">visual</span>(colormap <span class="op">=</span> <span class="op">:</span>grayC, colorrange <span class="op">=</span> (<span class="fl">0</span>, <span class="fl">6</span>))</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-20-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p><code>Wireframe</code>을 지정하여 3D 그래프로 표현할 수 있습니다.</p>
-<div id="ab230784" class="cell" data-execution_count="20">
+<div id="15c5cdbb" class="cell" data-execution_count="20">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>axis <span class="op">=</span> (<span class="kw">type</span> <span class="op">=</span> Axis3, width <span class="op">=</span> <span class="fl">300</span>, height <span class="op">=</span> <span class="fl">300</span>)</span>
@@ -369,9 +588,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layer <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="21">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-21-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p><code>Contour</code>를 구할 수도 있습니다.</p>
-<div id="08f0897d" class="cell" data-execution_count="21">
+<div id="4ddfe212" class="cell" data-execution_count="21">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>axis <span class="op">=</span> (width <span class="op">=</span> <span class="fl">225</span>, height <span class="op">=</span> <span class="fl">225</span>)</span>
@@ -379,27 +605,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layer <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-22-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>위에 내용을 합쳐서 아래와 같이 그릴 수도 있습니다.</p>
-<div id="5f1df874" class="cell" data-execution_count="22">
+<div id="ca50a6d5" class="cell" data-execution_count="22">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb22"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> <span class="fu">density</span>() <span class="op">*</span> <span class="fu">visual</span>(Contour) <span class="op">+</span> <span class="fu">linear</span>() <span class="op">+</span> <span class="fu">mapping</span>()</span>
 <span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-23-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p><code>mapping</code>대신 <code>visual</code> 을 사용하여 특성을 지정할 수 도 있습니다.</p>
-<div id="5d1321be" class="cell" data-execution_count="23">
+<div id="f256aee3" class="cell" data-execution_count="23">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>layers <span class="op">=</span> <span class="fu">density</span>() <span class="op">*</span> <span class="fu">visual</span>(Contour) <span class="op">+</span> <span class="fu">linear</span>() <span class="op">+</span> <span class="fu">visual</span>(alpha <span class="op">=</span> <span class="fl">0.5</span>)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers <span class="op">*</span> <span class="fu">mapping</span>(color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="24">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-24-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>색을 사용해서 3개 변수를 표현하기 할 수 있습니다.</p>
-<div id="77fb49e3" class="cell" data-execution_count="24">
+<div id="83423e7e" class="cell" data-execution_count="24">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>body_mass <span class="op">=</span> <span class="op">:</span>body_mass_g <span class="op">=&gt;</span> (t <span class="op">-&gt;</span> t <span class="op">/</span> <span class="fl">1000</span>) <span class="op">=&gt;</span> <span class="st">"body mass (kg)"</span></span>
@@ -407,29 +654,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers</span>
 <span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="25">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-25-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>혹은 축을 지정하여 3차원으로 표현할 수도 있습니다.</p>
-<div id="215f9a77" class="cell" data-execution_count="25">
+<div id="8bb1e55a" class="cell" data-execution_count="25">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>axis <span class="op">=</span> (<span class="kw">type</span> <span class="op">=</span> Axis3, width <span class="op">=</span> <span class="fl">300</span>, height <span class="op">=</span> <span class="fl">300</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> <span class="fu">mapping</span>(body_mass, color <span class="op">=</span> <span class="op">:</span>species)</span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-26-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>레이아웃을 지정하여 구분하여 표현도 가능합니다.</p>
-<div id="f6a1f570" class="cell" data-execution_count="26">
+<div id="6105943f" class="cell" data-execution_count="26">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> <span class="fu">mapping</span>(body_mass, color <span class="op">=</span> <span class="op">:</span>species, layout <span class="op">=</span> <span class="op">:</span>sex)</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="27">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-27-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="머신러닝과-같이-사용하기" class="level2">
 <h2 class="anchored" data-anchor-id="머신러닝과-같이-사용하기">머신러닝과 같이 사용하기</h2>
 <p>간단히 Decision Tree 모델을 만들어 봅니다.</p>
-<div id="71a01064" class="cell" data-execution_count="27">
+<div id="7cedc4c4" class="cell" data-execution_count="27">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">DecisionTree</span>, <span class="bu">Random</span></span>
@@ -454,14 +722,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>penguins.predicted_species <span class="op">=</span> ŷ;</span>
 <span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>CSV.<span class="fu">write</span>(<span class="st">"penguins.csv"</span>, penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>CSV.<span class="fu">write</span>(<span class="st">"../data/penguins.csv"</span>, penguins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>결과를 보면 <code>Chinstrap</code>종에 대해서 정확도가 낮음을 볼 수 있습니다.</p>
-<div id="15056cae" class="cell" data-execution_count="28">
+<div id="73a39f27" class="cell" data-execution_count="28">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"penguins.csv"</span>, DataFrame)</span>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> CSV.<span class="fu">read</span>(<span class="st">"../data/penguins.csv"</span>, DataFrame)</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>penguin_bill <span class="op">=</span> <span class="fu">data</span>(penguins) <span class="op">*</span> <span class="fu">mapping</span>(<span class="op">:</span>bill_length_mm,<span class="op">:</span>bill_depth_mm)</span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>axis <span class="op">=</span> (width <span class="op">=</span> <span class="fl">225</span>, height <span class="op">=</span> <span class="fl">225</span>)</span>
@@ -473,9 +741,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mapping</span>(col <span class="op">=</span> dataset)</span>
 <span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="28">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-29-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>에러율은 아래와 같이 볼 수 있습니다.</p>
-<div id="2ff85f7f" class="cell" data-execution_count="29">
+<div id="3735b436" class="cell" data-execution_count="29">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb29"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>error_rate <span class="op">=</span> (<span class="op">:</span>species, <span class="op">:</span>predicted_species) <span class="op">=&gt;</span> !isequal <span class="op">=&gt;</span> <span class="st">"error rate"</span></span>
@@ -485,9 +760,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mapping</span>(col <span class="op">=</span> dataset)</span>
 <span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-30-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>테스트와 트레이닝 기준으로 아래와 같이 분포를 볼 수 있습니다.</p>
-<div id="205ee6ab" class="cell" data-execution_count="30">
+<div id="f3cd47a2" class="cell" data-execution_count="30">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>prediction <span class="op">=</span> <span class="op">:</span>predicted_species <span class="op">=&gt;</span> <span class="st">"predicted species"</span></span>
@@ -495,9 +777,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> datalayer</span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-31-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>여기에 모델의 pdf를 곂치면 아래와 같습니다.</p>
-<div id="166c4201" class="cell" data-execution_count="31">
+<div id="684573a2" class="cell" data-execution_count="31">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb31"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>pdflayer <span class="op">=</span> <span class="fu">density</span>() <span class="op">*</span> <span class="fu">visual</span>(Contour) <span class="op">*</span> <span class="fu">mapping</span>(group <span class="op">=</span> <span class="op">:</span>species, color<span class="op">=:</span>species)</span>
@@ -505,9 +794,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers</span>
 <span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-32-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>단색으로 해당되는 확률만 표현할 수도 있습니다.</p>
-<div id="a809e705" class="cell" data-execution_count="32">
+<div id="7bb66e2e" class="cell" data-execution_count="32">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb32"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>pdflayer <span class="op">=</span> <span class="fu">density</span>() <span class="op">*</span> <span class="fu">visual</span>(Contour, colormap<span class="op">=</span><span class="fu">Reverse</span>(<span class="op">:</span>grays)) <span class="op">*</span> <span class="fu">mapping</span>(group <span class="op">=</span> <span class="op">:</span>species, row<span class="op">=:</span>species, col <span class="op">=</span> dataset)</span>
@@ -515,9 +811,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers</span>
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-33-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 <p>전체를 같이 표현할 수도 있습니다.</p>
-<div id="0b36564d" class="cell" data-execution_count="33">
+<div id="641e474a" class="cell" data-execution_count="33">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb33"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>pdflayer <span class="op">=</span> <span class="fu">density</span>() <span class="op">*</span> <span class="fu">visual</span>(Contour, colormap<span class="op">=</span><span class="fu">Reverse</span>(<span class="op">:</span>grays)) <span class="op">*</span> <span class="fu">mapping</span>(group <span class="op">=</span> <span class="op">:</span>species)</span>
@@ -525,6 +828,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>plt <span class="op">=</span> penguin_bill <span class="op">*</span> layers</span>
 <span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(plt; axis <span class="op">=</span> axis)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<div>
+<figure class="figure">
+<p><img src="AoG_tutorial_01_files/figure-html/cell-34-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="마무리" class="level2">
