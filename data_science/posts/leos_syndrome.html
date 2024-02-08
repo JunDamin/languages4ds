@@ -102,6 +102,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-VSE5PGYZWW"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-VSE5PGYZWW', { 'anonymize_ip': true});
+</script>
 
 
 <link rel="stylesheet" href="../../styles.css">
@@ -124,10 +133,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
-  <li class="nav-item">
-    <a class="nav-link" href="../../about.html"> 
-<span class="menu-text">About</span></a>
-  </li>  
+  <li class="dropdown-header">
+ <span class="menu-text">about.qmdx</span></li>
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/JunDamin"> <i class="bi bi-github" role="img">
 </i> 
@@ -192,7 +199,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>기본 문법 들을 하나 하나 살펴보도록 하겠습니다.</p>
 <section id="패키지-불러오기" class="level2">
 <h2 class="anchored" data-anchor-id="패키지-불러오기">패키지 불러오기</h2>
-<div id="2d8f0d77" class="cell">
+<div id="807f15b3" class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Downloads</span>, <span class="bu">GLMakie</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Colors</span>, <span class="bu">Statistics</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">FileIO</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -201,14 +208,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="백엔드-선택하기" class="level2">
 <h2 class="anchored" data-anchor-id="백엔드-선택하기">백엔드 선택하기</h2>
-<div id="e8dc4087" class="cell">
+<div id="796eb03b" class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>GLMakie.<span class="fu">activate!</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>위에서 불러온 그래픽 패키지인 <code>GLMakie</code>를 활성화 시킵니다.</p>
 </section>
 <section id="파일명-합치기" class="level2">
 <h2 class="anchored" data-anchor-id="파일명-합치기">파일명 합치기</h2>
-<div id="e455b55e" class="cell">
+<div id="8789f544" class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>names <span class="op">=</span> [<span class="st">"Leonardo Dicaprio"</span>, <span class="st">"Gisele Bundchen"</span>, <span class="st">"Bar Refaeli"</span>,</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Blake Lively"</span>, <span class="st">"Erin Heatherton"</span>, <span class="st">"Toni Garrn"</span>, <span class="st">"Kelly Rohrbach"</span>,</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">"Nina Agdal"</span>, <span class="st">"Camila Morrone"</span>]</span>
@@ -218,7 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="축에-들어갈-값을-생성하기" class="level2">
 <h2 class="anchored" data-anchor-id="축에-들어갈-값을-생성하기">축에 들어갈 값을 생성하기</h2>
-<div id="327f4f75" class="cell">
+<div id="1458aa9f" class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>y_xticks <span class="op">=</span> <span class="fl">1998</span><span class="op">:</span><span class="fl">2022</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ys_xticks <span class="op">=</span> <span class="fu">string</span>.(<span class="fl">1998</span><span class="op">:</span><span class="fl">2022</span>)</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>yd_xticks <span class="op">=</span> [<span class="st">"'"</span><span class="op">*</span>t[<span class="fl">3</span><span class="op">:</span><span class="fl">4</span>] for t <span class="kw">in</span> ys_xticks]</span>
@@ -237,7 +244,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="사진을-불러오는-함수" class="level2">
 <h2 class="anchored" data-anchor-id="사진을-불러오는-함수">사진을 불러오는 함수</h2>
-<div id="97b775db" class="cell">
+<div id="4fbd04ff" class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">getPicture</span>(; name <span class="op">=</span> <span class="st">"leonardo_dicaprio"</span>,</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>        imgs_link <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/tashapiro/tanya-data-viz/main/dicaprio-gfs/images/"</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">load</span>(<span class="bu">Downloads</span>.<span class="fu">download</span>(<span class="fu">joinpath</span>(imgs_link, name <span class="op">*</span> <span class="st">".png"</span>)))</span>
@@ -249,26 +256,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="베지어-곡선을-만들어-주는-함수" class="level2">
 <h2 class="anchored" data-anchor-id="베지어-곡선을-만들어-주는-함수">베지어 곡선을 만들어 주는 함수</h2>
-<div id="749ba3b6" class="cell">
+<div id="30f50f2d" class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">poly3</span>(t, p0, p1, p2, p3)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Point2f</span>((<span class="fl">1</span><span class="op">-</span>t)<span class="op">^</span><span class="fl">3</span> <span class="op">.*</span> p0 <span class="op">.+</span> <span class="fu">t*p1*</span>(<span class="fl">3</span><span class="fu">*</span>(<span class="fl">1</span><span class="op">-</span>t)<span class="op">^</span><span class="fl">2</span>) <span class="op">+</span> <span class="fu">p2*</span>(<span class="fl">3</span><span class="fu">*</span>(<span class="fl">1</span><span class="op">-</span>t)<span class="op">*</span>t<span class="op">^</span><span class="fl">2</span>) <span class="op">.+</span> p3<span class="op">*</span>t<span class="op">^</span><span class="fl">3</span>)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div id="b048b935" class="cell">
+<div id="4113181b" class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">BezierPath</span>(o, f, co, cf; t <span class="op">=</span> <span class="fu">range</span>(<span class="fl">0</span>,<span class="fl">1</span>, length<span class="op">=</span><span class="fl">30</span>))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [<span class="fu">poly3</span>(t, o, co, cf, f) for t <span class="kw">in</span> t]</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>베지어 곡선을 만들기 위한 함수입니다. <code>p0, p1, p2, p3</code> 점을 지나는 베지어 곡선을 위해서 만들어진 함수 입니다.</p>
 <p>위의 <code>poly3</code>는 3차 함수이며 <code>range()</code>함수를 통해서 30개의 포인트를 부드럽게 생성하는 함수 입니다.</p>
-<div id="ca5d1c6e" class="cell">
+<div id="08b65ced" class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">posFig</span>(ax, x; yoff<span class="op">=</span><span class="fl">100</span>, ylow <span class="op">=</span> <span class="fl">15</span>)</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    o <span class="op">=</span> ax.scene.px_area[].origin <span class="op">-</span> <span class="fu">Point2f</span>(<span class="fl">0</span>, yoff)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Makie.<span class="fu">project</span>(ax.scene, <span class="fu">Point2f</span>(x, ylow)) <span class="op">+</span> o</span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>피겨의 위치를 반환 합니다.</p>
-<div id="85a076f7" class="cell">
+<div id="cdaf3e04" class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">function</span> <span class="fu">supLine</span>(p1, p2; x<span class="op">=</span><span class="fl">0</span>,y<span class="op">=</span><span class="fl">8</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    [p1 <span class="op">.+</span> <span class="fu">Point2f</span>(x,y), p1, p2, p2 <span class="op">.+</span> <span class="fu">Point2f</span>(x,y)]</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -277,7 +284,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="색과-사진" class="level2">
 <h2 class="anchored" data-anchor-id="색과-사진">색과 사진</h2>
-<div id="0242fb71" class="cell">
+<div id="046f6d2c" class="cell">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pictures <span class="op">=</span> [<span class="fu">getPicture</span>(; name <span class="op">=</span> n) for n <span class="kw">in</span> namesfiles]</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> <span class="fu">resample_cmap</span>(<span class="fu">Reverse</span>(<span class="op">:</span>Hiroshige), <span class="fl">9</span>)</span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>blue <span class="op">=</span> colorant<span class="st">"#6EE2FFFF"</span>;</span>
@@ -291,7 +298,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="범주를-위한-도형" class="level2">
 <h2 class="anchored" data-anchor-id="범주를-위한-도형">범주를 위한 도형</h2>
-<div id="a952e772" class="cell">
+<div id="5b73a755" class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>legleo <span class="op">=</span> <span class="fu">MarkerElement</span>(color <span class="op">=</span><span class="fl">1.2</span>cmap[<span class="fl">2</span><span class="op">:</span><span class="fl">3</span><span class="op">:</span><span class="kw">end</span>], marker <span class="op">=</span> <span class="op">:</span>circle, markersize <span class="op">=</span> <span class="fl">20</span>,</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>        points <span class="op">=</span> Point2f[(<span class="fl">0</span>, <span class="fl">0.5</span>), (<span class="fl">1</span>, <span class="fl">0.5</span>), (<span class="fl">2</span>, <span class="fl">0.5</span>)])</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>leggirl <span class="op">=</span> <span class="fu">PolyElement</span>(color <span class="op">=</span> αcolorsLeg, strokecolor <span class="op">=</span> <span class="op">:</span>white, strokewidth <span class="op">=</span> <span class="fl">0.85</span>,</span>
@@ -301,7 +308,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="테마-블록" class="level2">
 <h2 class="anchored" data-anchor-id="테마-블록">테마 블록</h2>
-<div id="46f01617" class="cell">
+<div id="c324d72c" class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">with_theme</span>(<span class="fu">theme_black</span>()) <span class="cf">do</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="op">...</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">end</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -310,14 +317,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="그림-사이즈와-축-정하기" class="level2">
 <h2 class="anchored" data-anchor-id="그림-사이즈와-축-정하기">그림 사이즈와 축 정하기</h2>
-<div id="c5a6bc97" class="cell">
+<div id="2f13b9e8" class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> <span class="fu">Figure</span>(; resolution <span class="op">=</span> (<span class="fl">1200</span>,<span class="fl">800</span>))</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> <span class="fu">Axis</span>(fig[<span class="fl">1</span>,<span class="fl">1</span><span class="op">:</span><span class="fl">9</span>], ylabel <span class="op">=</span> <span class="st">"Age [Years]"</span>, xlabel <span class="op">=</span> <span class="st">""</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 <section id="그래프-그리기" class="level2">
 <h2 class="anchored" data-anchor-id="그래프-그리기">그래프 그리기</h2>
-<div id="985f9b0c" class="cell">
+<div id="4c343894" class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">lines!</span>(ax, y_xticks, age_leo; label <span class="op">=</span> <span class="st">"Leo's age"</span>, color <span class="op">=</span> age_leo,</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>        linestyle <span class="op">=</span> <span class="op">:</span>dot, colormap <span class="op">=</span> <span class="fl">1.2</span>cmap[<span class="fl">2</span><span class="op">:</span><span class="kw">end</span>])</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scatter!</span>(ax, y_xticks, age_leo; label <span class="op">=</span> <span class="st">"Leo's age"</span>, color <span class="op">=</span> age_leo,</span>
@@ -326,7 +333,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="여자친구들의-나이-그래프-그리기" class="level2">
 <h2 class="anchored" data-anchor-id="여자친구들의-나이-그래프-그리기">여자친구들의 나이 그래프 그리기</h2>
-<div id="9748b5bc" class="cell">
+<div id="c6bc893d" class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>    [<span class="fu">barplot!</span>.(years[i], age_gf[i]; color <span class="op">=</span> αcolors,label <span class="op">=</span> <span class="st">"Girlfriend's age"</span>,</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>        strokewidth<span class="op">=</span><span class="fl">0.85</span>, strokecolor<span class="op">=</span> (<span class="op">:</span>white,<span class="fl">1</span>)) for i <span class="kw">in</span> <span class="fu">eachindex</span>(years)]</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -348,7 +355,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="레오나르도의-나이-입력하기" class="level2">
 <h2 class="anchored" data-anchor-id="레오나르도의-나이-입력하기">레오나르도의 나이 입력하기</h2>
-<div id="9d06b364" class="cell">
+<div id="7ea3b4eb" class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">text!</span>(<span class="fu">string</span>.(age_leo), position <span class="op">=</span> <span class="fu">Point2f</span>.(y_xticks, age_leo <span class="op">.+</span><span class="fl">0.5</span>),</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>        align <span class="op">=</span> (<span class="op">:</span>center, <span class="op">:</span>bottom), fontsize <span class="op">=</span> <span class="fl">16</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -356,7 +363,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="축상-숫자-표시" class="level2">
 <h2 class="anchored" data-anchor-id="축상-숫자-표시">축상 숫자 표시</h2>
-<div id="268c687e" class="cell">
+<div id="b92186a9" class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>    ax.xticks <span class="op">=</span> (y_xticks, yd_xticks)</span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    ax.yticks <span class="op">=</span> <span class="fl">0</span><span class="op">:</span><span class="fl">5</span><span class="op">:</span><span class="fl">55</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ylims!</span>(ax,<span class="fl">15</span>,<span class="fl">52</span>)</span>
@@ -369,7 +376,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="사진-배치" class="level2">
 <h2 class="anchored" data-anchor-id="사진-배치">사진 배치</h2>
-<div id="1c991758" class="cell">
+<div id="88270441" class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>    <span class="co"># pictures</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    aximgs <span class="op">=</span> [<span class="fu">Axis</span>(fig[<span class="fl">2</span>,i], aspect <span class="op">=</span> <span class="fl">1</span>, xlabel <span class="op">=</span> <span class="fu">join</span>(<span class="fu">split</span>(names[i]), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>),</span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        xlabelcolor <span class="op">=</span> blue) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">9</span>]</span>
@@ -385,7 +392,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="곡선으로-연결하기" class="level2">
 <h2 class="anchored" data-anchor-id="곡선으로-연결하기">곡선으로 연결하기</h2>
-<div id="624c69fb" class="cell">
+<div id="eae8d1bd" class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># connecting lines in fig space!</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    ops <span class="op">=</span> [<span class="fu">posFig</span>(ax, <span class="fu">mean</span>(years[i]); yoff<span class="op">=</span><span class="fl">250</span>, ylow <span class="op">=</span> <span class="fl">15</span>) for i <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>]</span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    fps <span class="op">=</span> [<span class="fu">posFig</span>(aximgs[i], <span class="fl">39</span>; yoff<span class="op">=</span><span class="fl">120</span>, ylow <span class="op">=</span> <span class="fl">78</span>) for i <span class="kw">in</span> <span class="fl">2</span><span class="op">:</span><span class="fl">9</span>]</span>
@@ -399,7 +406,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="제목과-마무리" class="level2">
 <h2 class="anchored" data-anchor-id="제목과-마무리">제목과 마무리</h2>
-<div id="ff27cede" class="cell">
+<div id="5d6bc6a8" class="cell">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rowsize!</span>(fig.layout,<span class="fl">2</span>,<span class="fu">Auto</span>(<span class="fl">0.2</span>))</span>
 <span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rowgap!</span>(fig.layout, <span class="fl">60</span>)</span>
 <span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">Legend</span>(fig[<span class="fl">1</span>,<span class="fl">1</span>], [legleo, leggirl], [<span class="st">"      Leo's age"</span>, <span class="st">"      Girlfriend's age"</span>],</span>
@@ -415,7 +422,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>이 모든 과정을 다 모아서 아래와 같이 작성하면 위에서 보았던 이미지를 얻을 수 있습니다.</p>
 <p>이 모든 과정을 통해 우리는 <code>Makie</code>를 통해 어떻게 그림을 그릴 수 있는지 알 수 있었습니다.</p>
 <p>자동으로 위치를 잡아주고 연결해주는 등의 편의 기능은 부족하기에 실무에서 효과적일지에 대해서는 좀 더 알아보아야 할 것 같습니다.</p>
-<div id="58509ec9" class="cell">
+<div id="05a695ce" class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode julia code-with-copy"><code class="sourceCode julia"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Downloads</span>, <span class="bu">GLMakie</span></span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">Colors</span>, <span class="bu">Statistics</span></span>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="im">using</span> <span class="bu">FileIO</span></span>
@@ -909,6 +916,12 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script>
+<script src="https://utteranc.es/client.js" repo="JunDamin/recipes4ds" issue-term="pathname" theme="github-light" crossorigin="anonymous" async="">
+</script>
+<script src="https://giscus.app/client.js" data-repo="JunDamin/recipes4ds" data-repo-id="R_kgDOIAXuPw" data-category="General" data-category-id="DIC_kwDOIAXuP84CdD73" data-mapping="title" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="top" data-theme="light" data-lang="en" crossorigin="anonymous" async="">
+</script>
+<input type="hidden" id="giscus-base-theme" value="light">
+<input type="hidden" id="giscus-alt-theme" value="dark">
 </div> <!-- /content -->
 
 
