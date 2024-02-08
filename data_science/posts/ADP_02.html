@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.548">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="dcterms.date" content="2024-02-05">
+
+<title>Practical Recipes for Data Science - ADP 준비 (2) : 탐색적 데이터 분석(EDA)</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../images/siamese-cat.png" rel="icon" type="image/png">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed fullcontent">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top quarto-banner">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Practical Recipes for Data Science</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/JunDamin"> <i class="bi bi-github" role="img">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+          <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<header id="title-block-header" class="quarto-title-block default page-columns page-full">
+  <div class="quarto-title-banner page-columns page-full">
+    <div class="quarto-title column-body">
+      <h1 class="title">ADP 준비 (2) : 탐색적 데이터 분석(EDA)</h1>
+                                <div class="quarto-categories">
+                <div class="quarto-category">python</div>
+                <div class="quarto-category">adp</div>
+                <div class="quarto-category">test</div>
+                <div class="quarto-category">data</div>
+              </div>
+                  </div>
+  </div>
+    
+  
+  <div class="quarto-title-meta">
+
+      
+      <div>
+      <div class="quarto-title-meta-heading">Published</div>
+      <div class="quarto-title-meta-contents">
+        <p class="date">February 5, 2024</p>
+      </div>
+    </div>
+    
+      
+    </div>
+    
+  
+  </header><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content quarto-banner-title-block" id="quarto-document-content">
+
+
+
+
+
+<section id="탐색적-데이터-분석이란" class="level2">
+<h2 class="anchored" data-anchor-id="탐색적-데이터-분석이란">탐색적 데이터 분석이란</h2>
+<p>탐색적 데이터 분석(EDA)은 데이터 세트를 주의 깊게 조사하고, 그 안에서 패턴, 이상치, 기본 구조를 탐색하여 데이터의 특성과 내재된 관계를 이해하는 과정입니다. EDA는 통계적 그래픽과 요약 통계를 활용해 데이터를 시각적으로 검토하는 것을 포함하며, 데이터 과학 프로젝트의 초기 단계에서 매우 중요한 역할을 합니다.</p>
+<section id="왜-eda를-할까" class="level3">
+<h3 class="anchored" data-anchor-id="왜-eda를-할까">왜 EDA를 할까?</h3>
+<p>탐색적 데이터 분석은 데이터 과학자와 분석가가 데이터를 깊이 이해하고, 효과적인 분석 전략을 수립하며, 데이터 기반 의사 결정을 내리는 데 있어 핵심적인 과정입니다. EDA는 데이터의 질적인 면모를 파악하고, 분석 준비 과정에서 발생할 수 있는 문제를 사전에 식별하며 해결책을 모색하는 데 도움을 줍니다. 따라서, 모든 데이터 분석 프로젝트에서 EDA에 충분한 시간과 노력을 투자하는 것이 중요합니다.</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://www.research.autodesk.com/app/uploads/2023/03/AllDinos-2.png" class="img-fluid figure-img"></p>
+<figcaption>The Datasaurus Dozen</figcaption>
+</figure>
+</div>
+<p><strong>데이터 이해</strong>: 데이터의 분포, 중심 경향성, 변이도 등을 파악함으로써 데이터 분석 전략을 수립하는 데 필수적입니다. 예를 들어, 시애틀 지역의 평균 연봉을 조사할 때, 빌 게이츠와 같은 이상치를 고려하지 않으면 평균값이 실제보다 과대평가될 수 있습니다. 이런 문제를 방지하기 위해 EDA를 통한 데이터의 깊은 이해가 필요합니다.</p>
+<p><strong>패턴 및 관계 발견</strong>: 데이터 내 숨겨진 패턴과 관계를 발견하는 것은 데이터 기반 의사 결정에 있어 필수적입니다. ‘The Datasaurus Dozen’ 예시처럼, 동일한 통계 요약이라도 데이터 간에 명확한 패턴 차이가 있을 수 있으며, 이는 시각적 탐색 없이는 발견하기 어렵습니다. 이는 EDA가 단순한 요약 통계를 넘어선 깊은 데이터 이해를 가능하게 한다는 것을 보여줍니다.</p>
+<p><strong>데이터 정제 및 전처리</strong>: EDA를 통해 데이터의 결측치, 극단치, 이상치 등 문제점을 식별하고, 이를 어떻게 처리할지에 대한 전략을 세울 수 있습니다. 이 과정은 데이터 분석의 정확성을 높이고, 품질을 향상시키는 데 필수적입니다.</p>
+</section>
+<section id="어떻게-eda를-할까" class="level3">
+<h3 class="anchored" data-anchor-id="어떻게-eda를-할까">어떻게 EDA를 할까?</h3>
+<p>탐색적 데이터 분석(EDA)에는 정해진 방법은 없으며, 데이터의 특성과 분석 목적에 따라 다양한 접근을 할 수 있습니다. 일반적으로, EDA는 통계적 요약과 데이터 시각화의 두 가지 방법을 중심으로 진행됩니다.</p>
+<section id="통계적-요약으로-데이터-이해하기" class="level4">
+<h4 class="anchored" data-anchor-id="통계적-요약으로-데이터-이해하기">통계적 요약으로 데이터 이해하기</h4>
+<p>데이터의 기본적인 특성을 파악하기 위해 중앙값, 평균, 최대값, 최소값, 결측치 수와 같은 기본적인 통계값을 확인합니다. 이는 데이터의 전반적인 계량적 특성을 이해하는 데 도움이 됩니다. 또한, 분산, 표준편차, 사분위수 등을 통해 데이터의 분포와 변동성을 평가할 수 있습니다.</p>
+</section>
+<section id="시각화를-통한-직관적인-데이터-탐색" class="level4">
+<h4 class="anchored" data-anchor-id="시각화를-통한-직관적인-데이터-탐색">시각화를 통한 직관적인 데이터 탐색</h4>
+<p>데이터 시각화는 EDA의 가장 강력한 도구 중 하나입니다. 복잡한 데이터 세트에서 패턴, 이상치, 관계를 직관적으로 식별 할 수 있습니다.</p>
+<p><strong>히스토그램</strong>: 데이터의 분포를 이해하는 데 유용하며, 각 데이터 포인트가 속하는 구간의 빈도를 표현합니다. 히스토그램을 통해 데이터의 중심 경향성, 분산, 그리고 이상치의 존재 유무를 빠르게 파악할 수 있습니다. <strong>산포도(Scatter Plot)</strong>: 두 변수 간의 관계를 시각적으로 표현합니다. 데이터 포인트들이 어떻게 분포하는지, 두 변수 사이에 상관 관계가 있는지를 살펴볼 수 있습니다. <strong>박스 플롯(Box Plot)</strong>: 데이터의 중앙값, 사분위수, 이상치 등을 시각적으로 표현하는 데 유용합니다. 박스 플롯을 통해 데이터의 분포와 이상치를 한눈에 파악할 수 있습니다. <strong>히트맵(Heatmap)</strong>: 두 변수 간의 상관관계나, 데이터의 밀도 등을 색상의 강도로 표현합니다. 복잡한 관계나 패턴을 시각적으로 쉽게 이해할 수 있게 합니다.</p>
+</section>
+</section>
+</section>
+<section id="데이터-eda-진행하기" class="level2">
+<h2 class="anchored" data-anchor-id="데이터-eda-진행하기">데이터 EDA 진행하기</h2>
+<section id="데이터-불러오기" class="level3">
+<h3 class="anchored" data-anchor-id="데이터-불러오기">데이터 불러오기</h3>
+<p>EDA를 직접 수행하기 위해, 우선적으로 데이터를 불러옵니다. 본 예제에서는 <a href="(https://www.datamanim.com/dataset/ADPpb/00/29.html)">Datamanin에서 공유한 ADP 29회 대구도시공사의 영구임대아파트 입주자 퇴거여부 데이터</a>를 사용합니다. 이 데이터 세트는 고유번호를 가진 계약자와 특정 아파트에 대한 매년 퇴거여부를 기록한 것으로, 주거 정책 분석이나 도시 계획 연구에 유용할 수 있는 정보를 담고 있습니다.</p>
+<div id="197ad39d" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_csv(<span class="st">"https://raw.githubusercontent.com/Datamanim/datarepo/main/adp/29/p1.csv"</span>, encoding<span class="op">=</span><span class="st">"cp949"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(data.shape)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(86904, 23)</code></pre>
+</div>
+</div>
+<p><code>pandas</code> 라이브러리를 사용하여 데이터를 성공적으로 불러왔으며, 데이터는 총 23개의 컬럼과 86,904개의 레코드로 구성되어 있습니다. 이는 분석 준비 과정에서 데이터의 규모와 구조를 빠르게 파악할 수 있게 합니다.</p>
+</section>
+<section id="자료형-파악하기" class="level3">
+<h3 class="anchored" data-anchor-id="자료형-파악하기">자료형 파악하기</h3>
+<p>데이터의 자료형을 파악하는 것은 분석 방향을 설정하고 적절한 데이터 전처리 계획을 수립하는 데 중요합니다. <code>pandas</code>에서 제공하는 <code>info()</code> 메소드를 사용하면 각 컬럼의 데이터 타입과 결측치 여부를 쉽게 확인할 수 있습니다.</p>
+<div id="91c3fcbf" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>data.info()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 86904 entries, 0 to 86903
+Data columns (total 23 columns):
+ #   Column   Non-Null Count  Dtype  
+---  ------   --------------  -----  
+ 0   순번       86904 non-null  int64  
+ 1   계약구분     86396 non-null  object 
+ 2   재계약횟수    86904 non-null  int64  
+ 3   거주개월     86904 non-null  int64  
+ 4   아파트 이름   86904 non-null  object 
+ 5   아파트 ID   86904 non-null  int64  
+ 6   아파트 평점   85679 non-null  float64
+ 7   호실고유번호   86904 non-null  int64  
+ 8   층        86904 non-null  int64  
+ 9   평형대      86904 non-null  int64  
+ 10  계약자고유번호  86904 non-null  int64  
+ 11  계약서고유번호  86904 non-null  int64  
+ 12  입주연도     86904 non-null  int64  
+ 13  퇴거연도     25762 non-null  float64
+ 14  거주연도     86904 non-null  int64  
+ 15  월세(원)    86904 non-null  int64  
+ 16  보증금(원)   86904 non-null  int64  
+ 17  대표나이     86904 non-null  int64  
+ 18  나이       86904 non-null  int64  
+ 19  성별       86904 non-null  object 
+ 20  결혼여부     86904 non-null  object 
+ 21  거주자 수    86904 non-null  int64  
+ 22  퇴거여부     86904 non-null  object 
+dtypes: float64(2), int64(16), object(5)
+memory usage: 15.2+ MB</code></pre>
+</div>
+</div>
+<p>이 명령어를 실행하면, 각 컬럼별로 데이터 타입(<code>float64</code>, <code>int64</code>, <code>object</code>, <code>datetime64</code> 등)이 어떻게 되는지, 그리고 비어 있지 않은 값의 수가 몇 개인지를 알 수 있습니다. 이를 통해 어떤 컬럼이 수치형 데이터를 담고 있는지, 어떤 컬럼이 범주형 데이터나 날짜 정보를 포함하는지 파악할 수 있습니다. 또한, 결측치가 있는 컬럼을 식별하고, 이를 처리하기 위한 전략을 세울 수 있습니다.</p>
+</section>
+<section id="각-컬럼의-통계값-확인하기" class="level3">
+<h3 class="anchored" data-anchor-id="각-컬럼의-통계값-확인하기">각 컬럼의 통계값 확인하기</h3>
+<p>데이터의 다양한 특성을 깊이 이해하기 위해, <code>pandas</code>의 <code>describe</code> 메소드를 사용하여 각 컬럼의 기초 통계량을 확인합니다. 이 메소드는 평균(mean), 중앙값(50%), 표준편차(std), 최소값(min), 최대값(max) 등 숫자형 자료의 주요 통계량을 제공합니다.</p>
+<div id="4295ab31" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> data.describe()</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>summary</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="92">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">순번</th>
+<th data-quarto-table-cell-role="th">재계약횟수</th>
+<th data-quarto-table-cell-role="th">거주개월</th>
+<th data-quarto-table-cell-role="th">아파트 ID</th>
+<th data-quarto-table-cell-role="th">아파트 평점</th>
+<th data-quarto-table-cell-role="th">호실고유번호</th>
+<th data-quarto-table-cell-role="th">층</th>
+<th data-quarto-table-cell-role="th">평형대</th>
+<th data-quarto-table-cell-role="th">계약자고유번호</th>
+<th data-quarto-table-cell-role="th">계약서고유번호</th>
+<th data-quarto-table-cell-role="th">입주연도</th>
+<th data-quarto-table-cell-role="th">퇴거연도</th>
+<th data-quarto-table-cell-role="th">거주연도</th>
+<th data-quarto-table-cell-role="th">월세(원)</th>
+<th data-quarto-table-cell-role="th">보증금(원)</th>
+<th data-quarto-table-cell-role="th">대표나이</th>
+<th data-quarto-table-cell-role="th">나이</th>
+<th data-quarto-table-cell-role="th">거주자 수</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>85679.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>25762.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>8.690400e+04</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>6491.167507</td>
+<td>7.381709</td>
+<td>174.413318</td>
+<td>1.830295</td>
+<td>6.393294</td>
+<td>43444.813633</td>
+<td>7.881202</td>
+<td>13.289388</td>
+<td>43447.639257</td>
+<td>43447.678220</td>
+<td>2005.240127</td>
+<td>2015.992237</td>
+<td>2013.990150</td>
+<td>57680.561309</td>
+<td>3.384638e+06</td>
+<td>66.673893</td>
+<td>59.664043</td>
+<td>1.652536</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>3745.003081</td>
+<td>2.759457</td>
+<td>64.811846</td>
+<td>0.874843</td>
+<td>1.284757</td>
+<td>25088.009930</td>
+<td>4.267868</td>
+<td>2.385220</td>
+<td>25087.616670</td>
+<td>25087.498178</td>
+<td>4.834619</td>
+<td>3.144036</td>
+<td>3.729721</td>
+<td>30588.513118</td>
+<td>2.381399e+06</td>
+<td>12.949539</td>
+<td>13.275218</td>
+<td>0.926899</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>5.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>12.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1994.000000</td>
+<td>2008.000000</td>
+<td>2008.000000</td>
+<td>31300.000000</td>
+<td>1.520000e+06</td>
+<td>21.000000</td>
+<td>20.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>3241.000000</td>
+<td>5.000000</td>
+<td>126.000000</td>
+<td>1.000000</td>
+<td>5.000000</td>
+<td>21724.000000</td>
+<td>4.000000</td>
+<td>12.000000</td>
+<td>21721.000000</td>
+<td>21724.000000</td>
+<td>2002.000000</td>
+<td>2014.000000</td>
+<td>2011.000000</td>
+<td>40300.000000</td>
+<td>1.954000e+06</td>
+<td>59.000000</td>
+<td>51.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>6547.000000</td>
+<td>8.000000</td>
+<td>197.000000</td>
+<td>2.000000</td>
+<td>7.000000</td>
+<td>43425.000000</td>
+<td>8.000000</td>
+<td>12.000000</td>
+<td>43446.000000</td>
+<td>43451.000000</td>
+<td>2003.000000</td>
+<td>2017.000000</td>
+<td>2014.000000</td>
+<td>43600.000000</td>
+<td>2.144000e+06</td>
+<td>66.000000</td>
+<td>59.000000</td>
+<td>1.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>9711.250000</td>
+<td>10.000000</td>
+<td>222.000000</td>
+<td>2.000000</td>
+<td>7.000000</td>
+<td>65170.000000</td>
+<td>12.000000</td>
+<td>15.000000</td>
+<td>65175.000000</td>
+<td>65178.000000</td>
+<td>2008.000000</td>
+<td>2019.000000</td>
+<td>2017.000000</td>
+<td>62900.000000</td>
+<td>3.778000e+06</td>
+<td>76.000000</td>
+<td>69.000000</td>
+<td>2.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>12883.000000</td>
+<td>12.000000</td>
+<td>323.000000</td>
+<td>5.000000</td>
+<td>10.000000</td>
+<td>86891.000000</td>
+<td>15.000000</td>
+<td>19.000000</td>
+<td>86892.000000</td>
+<td>86904.000000</td>
+<td>2020.000000</td>
+<td>2020.000000</td>
+<td>2020.000000</td>
+<td>311080.000000</td>
+<td>2.078400e+07</td>
+<td>121.000000</td>
+<td>120.000000</td>
+<td>10.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>이 데이터로부터, 각 변수의 분포가 어떻게 되는지, 이상치가 존재하는지, 데이터가 얼마나 쏠려 있는지(왜도) 등을 파악할 수 있습니다. 특히, 중앙값과 평균의 차이를 분석함으로써 데이터 분포의 비대칭성을 탐색할 수 있습니다.</p>
+<div id="ecead8bd" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>values <span class="op">=</span> (summary.loc[<span class="st">"50%"</span>] <span class="op">-</span> summary.loc[<span class="st">"mean"</span>]).<span class="bu">abs</span>()  <span class="co"># 중간값과 평균 차이의 절대값</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>sorted_columns <span class="op">=</span> (values<span class="op">/</span>summary.loc[<span class="st">"mean"</span>]).sort_values(ascending<span class="op">=</span><span class="va">False</span>).index <span class="co"># 평균으로 나누어 정규화</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>summary[sorted_columns]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="93">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">거주자 수</th>
+<th data-quarto-table-cell-role="th">보증금(원)</th>
+<th data-quarto-table-cell-role="th">월세(원)</th>
+<th data-quarto-table-cell-role="th">거주개월</th>
+<th data-quarto-table-cell-role="th">평형대</th>
+<th data-quarto-table-cell-role="th">아파트 평점</th>
+<th data-quarto-table-cell-role="th">아파트 ID</th>
+<th data-quarto-table-cell-role="th">재계약횟수</th>
+<th data-quarto-table-cell-role="th">층</th>
+<th data-quarto-table-cell-role="th">나이</th>
+<th data-quarto-table-cell-role="th">대표나이</th>
+<th data-quarto-table-cell-role="th">순번</th>
+<th data-quarto-table-cell-role="th">입주연도</th>
+<th data-quarto-table-cell-role="th">퇴거연도</th>
+<th data-quarto-table-cell-role="th">호실고유번호</th>
+<th data-quarto-table-cell-role="th">계약서고유번호</th>
+<th data-quarto-table-cell-role="th">계약자고유번호</th>
+<th data-quarto-table-cell-role="th">거주연도</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">count</td>
+<td>86904.000000</td>
+<td>8.690400e+04</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>85679.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>25762.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+<td>86904.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">mean</td>
+<td>1.652536</td>
+<td>3.384638e+06</td>
+<td>57680.561309</td>
+<td>174.413318</td>
+<td>13.289388</td>
+<td>6.393294</td>
+<td>1.830295</td>
+<td>7.381709</td>
+<td>7.881202</td>
+<td>59.664043</td>
+<td>66.673893</td>
+<td>6491.167507</td>
+<td>2005.240127</td>
+<td>2015.992237</td>
+<td>43444.813633</td>
+<td>43447.678220</td>
+<td>43447.639257</td>
+<td>2013.990150</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">std</td>
+<td>0.926899</td>
+<td>2.381399e+06</td>
+<td>30588.513118</td>
+<td>64.811846</td>
+<td>2.385220</td>
+<td>1.284757</td>
+<td>0.874843</td>
+<td>2.759457</td>
+<td>4.267868</td>
+<td>13.275218</td>
+<td>12.949539</td>
+<td>3745.003081</td>
+<td>4.834619</td>
+<td>3.144036</td>
+<td>25088.009930</td>
+<td>25087.498178</td>
+<td>25087.616670</td>
+<td>3.729721</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">min</td>
+<td>1.000000</td>
+<td>1.520000e+06</td>
+<td>31300.000000</td>
+<td>1.000000</td>
+<td>12.000000</td>
+<td>5.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>20.000000</td>
+<td>21.000000</td>
+<td>1.000000</td>
+<td>1994.000000</td>
+<td>2008.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>1.000000</td>
+<td>2008.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">25%</td>
+<td>1.000000</td>
+<td>1.954000e+06</td>
+<td>40300.000000</td>
+<td>126.000000</td>
+<td>12.000000</td>
+<td>5.000000</td>
+<td>1.000000</td>
+<td>5.000000</td>
+<td>4.000000</td>
+<td>51.000000</td>
+<td>59.000000</td>
+<td>3241.000000</td>
+<td>2002.000000</td>
+<td>2014.000000</td>
+<td>21724.000000</td>
+<td>21724.000000</td>
+<td>21721.000000</td>
+<td>2011.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">50%</td>
+<td>1.000000</td>
+<td>2.144000e+06</td>
+<td>43600.000000</td>
+<td>197.000000</td>
+<td>12.000000</td>
+<td>7.000000</td>
+<td>2.000000</td>
+<td>8.000000</td>
+<td>8.000000</td>
+<td>59.000000</td>
+<td>66.000000</td>
+<td>6547.000000</td>
+<td>2003.000000</td>
+<td>2017.000000</td>
+<td>43425.000000</td>
+<td>43451.000000</td>
+<td>43446.000000</td>
+<td>2014.000000</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">75%</td>
+<td>2.000000</td>
+<td>3.778000e+06</td>
+<td>62900.000000</td>
+<td>222.000000</td>
+<td>15.000000</td>
+<td>7.000000</td>
+<td>2.000000</td>
+<td>10.000000</td>
+<td>12.000000</td>
+<td>69.000000</td>
+<td>76.000000</td>
+<td>9711.250000</td>
+<td>2008.000000</td>
+<td>2019.000000</td>
+<td>65170.000000</td>
+<td>65178.000000</td>
+<td>65175.000000</td>
+<td>2017.000000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">max</td>
+<td>10.000000</td>
+<td>2.078400e+07</td>
+<td>311080.000000</td>
+<td>323.000000</td>
+<td>19.000000</td>
+<td>10.000000</td>
+<td>5.000000</td>
+<td>12.000000</td>
+<td>15.000000</td>
+<td>120.000000</td>
+<td>121.000000</td>
+<td>12883.000000</td>
+<td>2020.000000</td>
+<td>2020.000000</td>
+<td>86891.000000</td>
+<td>86904.000000</td>
+<td>86892.000000</td>
+<td>2020.000000</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<p>거주자 수와 보증금, 월세, 거주개월 등은 평균과 중간값의 차이가 상대적으로 크다는 걸 알 수 있습니다. 중앙값과 평균의 차이가 상대적으로 큰 변수들을 살펴보면, 이러한 변수들은 데이터가 한쪽으로 쏠려 있음을 나타냅니다. 평균이 중앙값보다 크게 나타나는 경우, 데이터는 오른쪽(높은 값 쪽)으로 쏠려 있음을 의미합니다.</p>
+<p>그럼 이들 값들의 분포를 확인하는 그래프를 그려 보도록 하겠습니다.</p>
+</section>
+<section id="분포-그려보기" class="level3">
+<h3 class="anchored" data-anchor-id="분포-그려보기">분포 그려보기</h3>
+<p>데이터의 분포를 시각화하는 것은 데이터 분석에서 중요한 단계 중 하나입니다. 분포를 통해 데이터의 전반적인 형태, 중심 경향, 변동성, 그리고 이상치의 존재 여부를 파악할 수 있습니다. 히스토그램은 이러한 분석을 위해 자주사용되는 도구 중 하나로, 데이터를 구간별로 나누어 각 구간에 속하는 데이터 포인트의 수를 막대 그래프로 표현합니다.</p>
+<p><code>seaborn</code> 라이브러리는 <code>Python</code>에서 데이터 시각화를 위해 자주 사용되며, <code>matplotlib</code> 기반으로 더 다양하고 아름다운 그래픽 옵션을 제공합니다. 다만 한글 폰트 문제를 해결하기 위해 <code>matplotlib</code>의 폰트 설정을 변경해야 합니다.</p>
+<div id="754dccec" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plt.rc(<span class="st">'font'</span>, family<span class="op">=</span><span class="st">'NanumGothic'</span>)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">"ggplot"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-caution callout-titled" title="matplotlib에서 한글 사용하기">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+matplotlib에서 한글 사용하기
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>matplotlib</code>의 <code>font_manager</code> 모듈을 사용하여 시스템에 설치된 폰트 목록을 확인할 수 있습니다. 아래는 <code>matplotlib</code>에서 사용 가능한 폰트를 확인하는 코드 예시입니다:</p>
+<div id="d7618eed" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> font_manager</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>font_manager.get_font_names()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="histogram을-그려-봅니다." class="level3">
+<h3 class="anchored" data-anchor-id="histogram을-그려-봅니다.">histogram을 그려 봅니다.</h3>
+<p>데이터 시각화는 복잡한 데이터 세트를 이해하는 데 매우 중요한 도구입니다. 특히 히스토그램은 데이터의 분포, 중심 경향, 변동성을 직관적으로 파악할 수 있게 해주며, 이상치나 데이터의 형태를 식별하는 데 유용합니다.</p>
+<section id="단일-변수의-분포-시각화하기" class="level4">
+<h4 class="anchored" data-anchor-id="단일-변수의-분포-시각화하기">단일 변수의 분포 시각화하기</h4>
+<p>첫 번째 단계로, 우리는 <code>seaborn</code> 라이브러리의 <code>histplot</code> 함수를 사용하여 단일 변수의 분포를 시각화할 수 있습니다. 예를 들어, ‘거주자 수’ 데이터의 분포를 살펴보겠습니다:</p>
+<div id="e2aa17c4" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(data<span class="op">=</span>data, x<span class="op">=</span><span class="st">"거주자 수"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-8-output-1.png" width="611" height="432" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>이 히스토그램은 ’거주자 수’의 분포를 보여줍니다. 각 막대는 데이터의 구간을 나타내며, 막대의 높이는 해당 구간에 속하는 데이터 포인트의 수를 나타냅니다.</p>
+</section>
+<section id="이산-데이터-시각화" class="level4">
+<h4 class="anchored" data-anchor-id="이산-데이터-시각화">이산 데이터 시각화</h4>
+<p>데이터가 이산적인 값을 가질 경우, <code>bins</code> 파라미터를 지정하여 분포를 더 명확하게 표현할 수 있습니다. 이는 데이터를 특정 수의 구간으로 나누어 각 구간의 빈도를 보다 명확하게 시각화합니다</p>
+<div id="9e55b7d6" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>sns.histplot(data<span class="op">=</span>data, x<span class="op">=</span><span class="st">"거주자 수"</span>, bins<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-9-output-1.png" width="611" height="432" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="여러-컬럼-동시에-시각화하기" class="level4">
+<h4 class="anchored" data-anchor-id="여러-컬럼-동시에-시각화하기">여러 컬럼 동시에 시각화하기</h4>
+<p>데이터 세트에 있는 여러 변수의 분포를 동시에 시각화하려면, matplotlib의 subplots를 사용하여 여러 그래프를 배열할 수 있습니다. 이 방법은 데이터의 다양한 측면을 한눈에 비교하고 분석할 수 있게 해줍니다.</p>
+<div id="7ed238b2" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(data.columns)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ncols <span class="op">=</span> <span class="dv">4</span>  <span class="co"># 열의 수를 지정합니다.</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>nrows <span class="op">=</span> n<span class="op">//</span>ncols <span class="op">+</span> (<span class="dv">0</span> <span class="cf">if</span> n<span class="op">%</span>ncols <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">1</span>) <span class="co">#row 갯수를 정합니다. 딱 떨어지지 않으면 1줄을 더 추가합니다.</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(nrows, ncols, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">8</span>))   </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, column <span class="kw">in</span> <span class="bu">enumerate</span>(data.columns):</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  row, col <span class="op">=</span> <span class="bu">divmod</span>(i, ncols)   <span class="co"># 위치를 잡습니다.</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  sns.histplot(data<span class="op">=</span>data, x<span class="op">=</span>column, ax<span class="op">=</span>axes[row][col])</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-10-output-1.png" width="762" height="759" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="상관관계를-파악해-보기" class="level3">
+<h3 class="anchored" data-anchor-id="상관관계를-파악해-보기">상관관계를 파악해 보기</h3>
+<p>데이터 분석에서 수치형 데이터 간의 상관관계를 파악하는 것은 변수들 사이의 관계를 이해하고, 잠재적인 인사이트를 발견하는데 중요한 사항 중 하나입니다. 상관관계 분석을 통해 두 변수 간의 연관성의 강도와 방향을 확인할 수 있으며, 이는 향후 분석 방향성을 제시하거나 예측 모델을 구축하는 데 유용한 정보를 제공합니다.</p>
+<section id="수치형-데이터-필터링" class="level4">
+<h4 class="anchored" data-anchor-id="수치형-데이터-필터링">수치형 데이터 필터링</h4>
+<p>분석을 시작하기 전에, 수치형 데이터만을 포함하는 데이터프레임을 생성합니다. 이는 <code>pandas</code>의 <code>select_dtypes</code> 메소드를 사용하여 쉽게 수행할 수 있습니다:</p>
+<div id="28a56ed9" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>number_data <span class="op">=</span> data.select_dtypes(include<span class="op">=</span>[<span class="st">"number"</span>, <span class="st">"datetime"</span>])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>number_data.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="98">
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">순번</th>
+<th data-quarto-table-cell-role="th">재계약횟수</th>
+<th data-quarto-table-cell-role="th">거주개월</th>
+<th data-quarto-table-cell-role="th">아파트 ID</th>
+<th data-quarto-table-cell-role="th">아파트 평점</th>
+<th data-quarto-table-cell-role="th">호실고유번호</th>
+<th data-quarto-table-cell-role="th">층</th>
+<th data-quarto-table-cell-role="th">평형대</th>
+<th data-quarto-table-cell-role="th">계약자고유번호</th>
+<th data-quarto-table-cell-role="th">계약서고유번호</th>
+<th data-quarto-table-cell-role="th">입주연도</th>
+<th data-quarto-table-cell-role="th">퇴거연도</th>
+<th data-quarto-table-cell-role="th">거주연도</th>
+<th data-quarto-table-cell-role="th">월세(원)</th>
+<th data-quarto-table-cell-role="th">보증금(원)</th>
+<th data-quarto-table-cell-role="th">대표나이</th>
+<th data-quarto-table-cell-role="th">나이</th>
+<th data-quarto-table-cell-role="th">거주자 수</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>10</td>
+<td>222</td>
+<td>5</td>
+<td>7.0</td>
+<td>14520</td>
+<td>1</td>
+<td>12</td>
+<td>15468</td>
+<td>15865</td>
+<td>2003</td>
+<td>NaN</td>
+<td>2008</td>
+<td>47100</td>
+<td>3646000</td>
+<td>46</td>
+<td>33</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1</td>
+<td>10</td>
+<td>222</td>
+<td>5</td>
+<td>7.0</td>
+<td>14520</td>
+<td>1</td>
+<td>12</td>
+<td>15468</td>
+<td>15865</td>
+<td>2003</td>
+<td>NaN</td>
+<td>2009</td>
+<td>56500</td>
+<td>4375000</td>
+<td>46</td>
+<td>34</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1</td>
+<td>10</td>
+<td>222</td>
+<td>5</td>
+<td>7.0</td>
+<td>14520</td>
+<td>1</td>
+<td>12</td>
+<td>15468</td>
+<td>15865</td>
+<td>2003</td>
+<td>NaN</td>
+<td>2010</td>
+<td>56500</td>
+<td>4375000</td>
+<td>46</td>
+<td>35</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1</td>
+<td>10</td>
+<td>222</td>
+<td>5</td>
+<td>7.0</td>
+<td>14520</td>
+<td>1</td>
+<td>12</td>
+<td>15468</td>
+<td>15865</td>
+<td>2003</td>
+<td>NaN</td>
+<td>2011</td>
+<td>69900</td>
+<td>5408000</td>
+<td>46</td>
+<td>36</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1</td>
+<td>10</td>
+<td>222</td>
+<td>5</td>
+<td>7.0</td>
+<td>14520</td>
+<td>1</td>
+<td>12</td>
+<td>15468</td>
+<td>15865</td>
+<td>2003</td>
+<td>NaN</td>
+<td>2012</td>
+<td>69900</td>
+<td>5408000</td>
+<td>46</td>
+<td>37</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</section>
+<section id="의미-없는-수치-데이터-제거" class="level4">
+<h4 class="anchored" data-anchor-id="의미-없는-수치-데이터-제거">의미 없는 수치 데이터 제거</h4>
+<p>분석에 앞서, 데이터에 포함된 일부 수치는 분석이 필요하지 않는 데이터가 있습니다. 예를 들어, 아이디와 같은 식별자는 수치형 데이터이지만 상관관계 분석에는 적합하지 않습니다. 이러한 컬럼을 데이터프레임에서 제거합니다:</p>
+<div id="9b346035" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>number_data <span class="op">=</span> number_data.drop([<span class="st">'아파트 ID'</span>, <span class="st">'호실고유번호'</span>, <span class="st">'계약자고유번호'</span>, <span class="st">'계약서고유번호'</span>], axis<span class="op">=</span><span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="상관관계-계산하기" class="level4">
+<h4 class="anchored" data-anchor-id="상관관계-계산하기">상관관계 계산하기</h4>
+<p><code>DataFrame</code>의 <code>corr</code> 메소드를 사용하여 수치형 데이터 간의 상관관계를 쉽게 계산할 수 있습니다. 이 메소드는 각 변수 쌍 사이의 상관계수를 계산하여, 변수 간의 선형적 관계의 강도와 방향을 나타냅니다:</p>
+<div id="d77f98f5" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> number_data.corr()</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(corr_matrix)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>              순번     재계약횟수      거주개월    아파트 평점         층       평형대      입주연도  \
+순번      1.000000  0.064347  0.020264  0.669002  0.017053  0.071388 -0.003963   
+재계약횟수   0.064347  1.000000  0.942340  0.094593  0.003765  0.058462 -0.766560   
+거주개월    0.020264  0.942340  1.000000  0.035440  0.010561  0.055917 -0.846649   
+아파트 평점  0.669002  0.094593  0.035440  1.000000 -0.014835  0.136416 -0.016888   
+층       0.017053  0.003765  0.010561 -0.014835  1.000000 -0.003880 -0.008084   
+평형대     0.071388  0.058462  0.055917  0.136416 -0.003880  1.000000 -0.039263   
+입주연도   -0.003963 -0.766560 -0.846649 -0.016888 -0.008084 -0.039263  1.000000   
+퇴거연도   -0.048212  0.507212  0.508846 -0.035515 -0.005996  0.016107  0.167870   
+거주연도    0.002008 -0.089866 -0.110160  0.000813  0.000889  0.000209  0.342594   
+월세(원)   0.043362  0.234081  0.241858  0.119941  0.044420  0.387430 -0.225347   
+보증금(원)  0.014752  0.267571  0.259088  0.082025  0.018159  0.311986 -0.251460   
+대표나이    0.040838  0.212901  0.197168  0.028216 -0.054120 -0.031003 -0.202540   
+나이      0.040400  0.182430  0.161381  0.027753 -0.052542 -0.030184 -0.101318   
+거주자 수   0.021180 -0.101500 -0.065216  0.046848  0.012708  0.305857 -0.021285   
+
+            퇴거연도      거주연도     월세(원)    보증금(원)      대표나이        나이     거주자 수  
+순번     -0.048212  0.002008  0.043362  0.014752  0.040838  0.040400  0.021180  
+재계약횟수   0.507212 -0.089866  0.234081  0.267571  0.212901  0.182430 -0.101500  
+거주개월    0.508846 -0.110160  0.241858  0.259088  0.197168  0.161381 -0.065216  
+아파트 평점 -0.035515  0.000813  0.119941  0.082025  0.028216  0.027753  0.046848  
+층      -0.005996  0.000889  0.044420  0.018159 -0.054120 -0.052542  0.012708  
+평형대     0.016107  0.000209  0.387430  0.311986 -0.031003 -0.030184  0.305857  
+입주연도    0.167870  0.342594 -0.225347 -0.251460 -0.202540 -0.101318 -0.021285  
+퇴거연도    1.000000  0.544507  0.122154  0.109997 -0.040554  0.076886 -0.090187  
+거주연도    0.544507  1.000000  0.207519  0.172206 -0.055592  0.226726 -0.065814  
+월세(원)   0.122154  0.207519  1.000000  0.973427  0.045634  0.102818  0.157934  
+보증금(원)  0.109997  0.172206  0.973427  1.000000  0.053073  0.100153  0.131163  
+대표나이   -0.040554 -0.055592  0.045634  0.053073  1.000000  0.959848 -0.160751  
+나이      0.076886  0.226726  0.102818  0.100153  0.959848  1.000000 -0.175297  
+거주자 수  -0.090187 -0.065814  0.157934  0.131163 -0.160751 -0.175297  1.000000  </code></pre>
+</div>
+</div>
+</section>
+<section id="상관관계-결과-해석하기" class="level4">
+<h4 class="anchored" data-anchor-id="상관관계-결과-해석하기">상관관계 결과 해석하기</h4>
+<p>상관계수는 -1에서 1 사이의 값을 가지며, 값이 클수록 두 변수 사이에 강한 양의 선형 관계가, 값이 작을수록 강한 음의 선형 관계가 있음을 의미합니다. 0에 가까운 값은 두 변수 사이에 선형 관계가 거의 없음을 나타냅니다.</p>
+<p>상관관계 분석을 통해 우리는 데이터 내 변수들 간의 관계를 파악하고, 이를 바탕으로 더 깊은 데이터 분석을 진행할 수 있습니다. 예를 들어, 높은 상관관계를 가진 변수들을 발견하면, 이 변수들이 비슷한 정보를 담고 있거나 서로 영향을 미치고 있을 가능성을 고려할 수 있습니다. 이러한 인사이트는 향후 분석 방향을 결정하거나, 데이터 모델링에 있어 중요한 변수를 선택하는 데 도움을 줄 수 있습니다.</p>
+</section>
+<section id="상관관계-시각화하기-heatmap-사용법" class="level4">
+<h4 class="anchored" data-anchor-id="상관관계-시각화하기-heatmap-사용법">상관관계 시각화하기: Heatmap 사용법</h4>
+<p>상관관계 분석 결과를 시각화하는 가장 효과적인 방법 중 하나는 heatmap을 사용하는 것입니다. <code>seaborn</code> 라이브러리의 <code>heatmap</code> 함수를 통해, 데이터프레임의 상관계수 매트릭스를 색상의 강도로 나타낼 수 있으며, 이는 분석 결과를 직관적으로 이해할 수 있게 합니다.</p>
+<div id="d0ba2dba" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 상관계수 매트릭스를 Heatmap으로 시각화</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>sns.heatmap(number_data.corr(), cmap<span class="op">=</span><span class="st">'coolwarm'</span>, annot<span class="op">=</span><span class="va">True</span>, fmt<span class="op">=</span><span class="st">".2f"</span>, vmin<span class="op">=-</span><span class="dv">1</span>, vmax<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\freed\.pyenv\pyenv-win\versions\3.10.1\lib\site-packages\seaborn\utils.py:80: UserWarning: Glyph 8722 (\N{MINUS SIGN}) missing from current font.
+  fig.canvas.draw()
+C:\Users\freed\AppData\Roaming\Python\Python310\site-packages\IPython\core\pylabtools.py:152: UserWarning: Glyph 8722 (\N{MINUS SIGN}) missing from current font.
+  fig.canvas.print_figure(bytes_io, **kw)</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-14-output-2.png" width="606" height="470" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>주요 발견 사항</strong></p>
+<ul>
+<li><p>재계약 횟수와 거주개월, 월세와 보증금, 대표나이와 나이 사이에는 아주 강한 선형적 상관관계가 있습니다. 이러한 높은 상관관계는 변수들이 서로 밀접하게 연결되어 있음을 나타냅니다. 특히, 다중공선성 문제를 고려할 때, 이러한 변수들은 통계 모델에서 주의 깊게 다뤄야 합니다.</p></li>
+<li><p>입주연도와 재계약횟수, 거주개월 사이의 음의 상관관계는 입주 연도가 최근일수록 재계약 횟수와 거주 개월이 적다는 것을 의미할 수 있습니다. 이는 새로운 아파트가 시장에 나오면서 발생하는 자연스러운 현상일 수 있습니다.</p></li>
+<li><p>평형대와 거주자 수, 월세와 보증금 사이의 양의 상관관계는 큰 평수의 아파트에 거주자 수가 많고, 월세와 보증금이 높게 설정되는 경향을 보여줍니다. 이는 시장의 일반적인 기대와 일치합니다.</p></li>
+</ul>
+</section>
+<section id="분석의-한계와-주의사항" class="level4">
+<h4 class="anchored" data-anchor-id="분석의-한계와-주의사항">분석의 한계와 주의사항</h4>
+<p>상관관계 분석은 변수들 사이의 선형적 관계의 강도를 나타내지만, 인과관계를 설명하지는 않습니다. 따라서 상관관계가 높다고 해서 한 변수의 변화가 다른 변수의 변화를 직접적으로 초래한다고 해석해서는 안 됩니다.</p>
+<p>heatmap을 통한 상관관계 시각화는 데이터 내 변수들 간의 관계를 한눈에 파악할 수 있게 해줍니다. 이러한 분석을 통해 얻은 인사이트는 데이터를 더 깊게 이해하고, 향후 분석이나 모델링에 있어 중요한 변수를 선정하는 데 도움을 줄 수 있습니다. 특히, 의외의 상관관계를 발견했다면, 이를 근거로 추가적인 분석을 수행하여 데이터의 숨겨진 패턴이나 인사이트를 발견할 수 있습니다.</p>
+</section>
+</section>
+<section id="산포도로-데이터-관계-탐색하기" class="level3">
+<h3 class="anchored" data-anchor-id="산포도로-데이터-관계-탐색하기">산포도로 데이터 관계 탐색하기</h3>
+<p>데이터 분석에서 산포도는 두 변수 간의 관계를 시각적으로 파악하는 강력한 도구입니다. 상관계수로는 파악하기 어려운 데이터 포인트들의 분포와 특징을 살펴보면서, 변수 간의 선형적 관계뿐만 아니라 패턴이나 이상치를 발견할 수 있습니다.</p>
+<section id="상관관계가-높은-변수-쌍-선택하기" class="level4">
+<h4 class="anchored" data-anchor-id="상관관계가-높은-변수-쌍-선택하기">상관관계가 높은 변수 쌍 선택하기</h4>
+<p>분석을 시작하기 전에, 상관계수가 특정 임계값 이상인 변수 쌍을 선택하여 살펴보겠습니다. 이는 분석의 초점을 명확히 하고, 더 의미 있는 관계를 탐색하기 위한 전략입니다:</p>
+<div id="9e0994b7" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>corr_matrix <span class="op">=</span> number_data.corr()</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>pairs <span class="op">=</span> [(i, j, corr_matrix.at[i, j]) <span class="cf">for</span> i <span class="kw">in</span> corr_matrix.index <span class="cf">for</span> j <span class="kw">in</span> corr_matrix.columns <span class="cf">if</span> i <span class="op">!=</span> j]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>pairs <span class="op">=</span> <span class="bu">sorted</span>(pairs, key<span class="op">=</span><span class="kw">lambda</span> x: x[<span class="dv">2</span>], reverse<span class="op">=</span><span class="va">True</span>)[::<span class="dv">2</span>]  <span class="co"># 같읂 값이 연속될 것으로 하나씩만 뽑습니다.</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> pair <span class="kw">in</span> pairs[:<span class="dv">10</span>]:</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Columns: </span><span class="sc">{</span>pair[<span class="dv">0</span>]<span class="sc">}</span><span class="ss"> &amp; </span><span class="sc">{</span>pair[<span class="dv">1</span>]<span class="sc">}</span><span class="ss">, Correlation: </span><span class="sc">{</span>pair[<span class="dv">2</span>]<span class="sc">:.2f}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Columns: 월세(원) &amp; 보증금(원), Correlation: 0.97
+Columns: 대표나이 &amp; 나이, Correlation: 0.96
+Columns: 재계약횟수 &amp; 거주개월, Correlation: 0.94
+Columns: 순번 &amp; 아파트 평점, Correlation: 0.67
+Columns: 퇴거연도 &amp; 거주연도, Correlation: 0.54
+Columns: 거주개월 &amp; 퇴거연도, Correlation: 0.51
+Columns: 재계약횟수 &amp; 퇴거연도, Correlation: 0.51
+Columns: 평형대 &amp; 월세(원), Correlation: 0.39
+Columns: 입주연도 &amp; 거주연도, Correlation: 0.34
+Columns: 평형대 &amp; 보증금(원), Correlation: 0.31</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="산포도로-상관관계-시각화하기" class="level3">
+<h3 class="anchored" data-anchor-id="산포도로-상관관계-시각화하기">산포도로 상관관계 시각화하기</h3>
+<p>상관관계가 높은 변수 쌍 중 하나인 보증금과 월세 간의 관계를 산포도로 그려봅니다. 이를 통해 두 변수 사이의 관계를 직관적으로 이해할 수 있습니다:</p>
+<div id="8032d359" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sns.relplot(data<span class="op">=</span>data, x<span class="op">=</span><span class="st">"보증금(원)"</span>, y<span class="op">=</span><span class="st">"월세(원)"</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-16-output-1.png" width="470" height="471" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="분포와-함께-산포도-시각화하기" class="level4">
+<h4 class="anchored" data-anchor-id="분포와-함께-산포도-시각화하기">분포와 함께 산포도 시각화하기</h4>
+<p><code>jointplot</code>을 사용하여 보증금과 월세 간의 산포도와 함께 각 변수의 분포를 동시에 시각화합니다. 이는 변수 간의 관계뿐만 아니라 각 변수의 분포도 함께 확인할 수 있게 해줍니다:</p>
+<div id="e0c7a230" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>sns.jointplot(data<span class="op">=</span>data, x<span class="op">=</span><span class="st">"보증금(원)"</span>, y<span class="op">=</span><span class="st">"월세(원)"</span>, kind<span class="op">=</span><span class="st">"scatter"</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-17-output-1.png" width="595" height="567" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>이 그래프는 보증금과 월세 간에 뚜렷한 상관관계가 있음을 보여줍니다. 또한, 대부분의 데이터 포인트가 낮은 보증금과 월세 값에 집중되어 있는 분포 특성을 보여줍니다.</p>
+</section>
+<section id="산포도로-복잡한-데이터-관계-탐색하기" class="level4">
+<h4 class="anchored" data-anchor-id="산포도로-복잡한-데이터-관계-탐색하기">산포도로 복잡한 데이터 관계 탐색하기</h4>
+<p>상관계수는 두 변수 간의 선형 관계의 강도를 나타내지만, 모든 관계가 선형적인 것은 아닙니다. 산포도를 통해 우리는 상관계수로는 확인하기 어려운 데이터 간의 복잡한 관계와 분포상의 특징을 살펴볼 수 있습니다.</p>
+<p><strong>거주개월과 보증금 간의 관계</strong></p>
+<div id="6bd99af9" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sns.jointplot(data<span class="op">=</span>data, x<span class="op">=</span><span class="st">"거주개월"</span>, y<span class="op">=</span><span class="st">"보증금(원)"</span>, kind<span class="op">=</span><span class="st">"scatter"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-18-output-1.png" width="575" height="567" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>이 산포도에서는 거주개월과 보증금 간에 선형적이지 않은 관계가 나타납니다. 특히, 거주개월이 220개월을 넘어서면 보증금이 다시 하락하는 경향을 보이는 것으로, 단순히 선형 관계만으로는 설명할 수 없는 복잡한 패턴을 확인할 수 있습니다.</p>
+</section>
+<section id="상관계수가-높은-변수-쌍의-산포도-시각화" class="level4">
+<h4 class="anchored" data-anchor-id="상관계수가-높은-변수-쌍의-산포도-시각화">상관계수가 높은 변수 쌍의 산포도 시각화</h4>
+<p>상관계수가 높은 상위 10개 쌍과 낮은 하위 10개 쌍의 산포도를 그려, 다양한 변수 간의 관계를 더 깊이 탐색해 보겠습니다:</p>
+<div id="5a13e7fb" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>extreme_20 <span class="op">=</span> pairs[:<span class="dv">10</span>] <span class="op">+</span> pairs[<span class="op">-</span><span class="dv">10</span>:]</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> <span class="bu">len</span>(extreme_20)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>ncols <span class="op">=</span> <span class="dv">4</span>  <span class="co"># 열의 수를 지정합니다.</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>nrows <span class="op">=</span> n<span class="op">//</span>ncols <span class="op">+</span> (<span class="dv">0</span> <span class="cf">if</span> n<span class="op">%</span>ncols <span class="op">==</span> <span class="dv">0</span> <span class="cf">else</span> <span class="dv">1</span>) <span class="co">#row 갯수를 정합니다. 딱 떨어지지 않으면 1줄을 더 추가합니다.</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>fig, axes <span class="op">=</span> plt.subplots(nrows, ncols, figsize<span class="op">=</span>(<span class="dv">8</span>, <span class="dv">8</span>))  <span class="co"># 그래프 크기 조정</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, (x, y, corr) <span class="kw">in</span> <span class="bu">enumerate</span>(extreme_20):</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    row, col <span class="op">=</span> <span class="bu">divmod</span>(i, ncols)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    sns.scatterplot(data<span class="op">=</span>data, x<span class="op">=</span>x, y<span class="op">=</span>y, ax<span class="op">=</span>axes[row][col])</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    axes[row][col].set_title(<span class="ss">f"상관계수: </span><span class="sc">{</span>corr<span class="sc">:.2f}</span><span class="ss">"</span>, size<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-19-output-1.png" width="760" height="760" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>이러한 시각화를 통해, 상관계수가 높은 변수 쌍과 낮은 변수 쌍 간의 관계를 명확하게 이해할 수 있으며, 특정 변수 간에 예상치 못한 패턴이나 이상치가 있는지를 파악할 수 있습니다.</p>
+</section>
+</section>
+<section id="결측치-확인하기" class="level3">
+<h3 class="anchored" data-anchor-id="결측치-확인하기">결측치 확인하기</h3>
+<p>결측치는 데이터 세트에서 종종 발생하는 문제입니다. 결측치는 다양한 이유로 발생할 수 있으며, 결측치가 발생하면 데이터 분석에 부정적인 영향을 미칠 수 있습니다. 따라서 결측치를 확인하고 적절하게 처리하는 것이 중요합니다.</p>
+<section id="결측치-확인-방법" class="level4">
+<h4 class="anchored" data-anchor-id="결측치-확인-방법">결측치 확인 방법</h4>
+<p>결측치를 확인하는 방법에는 여러 가지가 있습니다. 가장 간단한 방법은 데이터 세트의 각 행과 열을 살펴보고 결측치가 있는지 확인하는 것입니다. 그러나 이 방법은 데이터 세트가 큰 경우에는 시간이 많이 걸릴 수 있습니다.</p>
+<p>결측치를 확인하는 보다 효율적인 방법은 결측치를 찾는 데 도움이 되는 통계 패키지를 사용하는 것입니다. 예를 들어, 파이썬의 pandas 패키지는 결측치를 확인하는 데 사용할 수 있는 isnull() 메서드를 제공합니다.</p>
+<p>isnull() 메서드는 결측치가 있는 행과 열을 True로 표시합니다. 따라서 이를 더하면 어떤 컬럼에 얼마나 결측치가 있는지 알 수 있습니다.</p>
+<div id="5b8da521" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>data.isnull().<span class="bu">sum</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="107">
+<pre><code>순번             0
+계약구분         508
+재계약횟수          0
+거주개월           0
+아파트 이름         0
+아파트 ID         0
+아파트 평점      1225
+호실고유번호         0
+층              0
+평형대            0
+계약자고유번호        0
+계약서고유번호        0
+입주연도           0
+퇴거연도       61142
+거주연도           0
+월세(원)          0
+보증금(원)         0
+대표나이           0
+나이             0
+성별             0
+결혼여부           0
+거주자 수          0
+퇴거여부           0
+dtype: int64</code></pre>
+</div>
+</div>
+</section>
+<section id="결측치-시각화하기" class="level4">
+<h4 class="anchored" data-anchor-id="결측치-시각화하기">결측치 시각화하기</h4>
+<p>결측치를 확인하는 또 다른 방법은 <code>missingno</code> 패키지를 이용하는 것입니다.</p>
+<div id="3dc852cd" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> missingno <span class="im">as</span> msno</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>msno.matrix(data)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="ADP_02_files/figure-html/cell-21-output-1.png" width="1992" height="896" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>위의 그래프에서 볼 수 있듯이 데이터 세트의 대부분의 컬럼은 모두 값이 있으나 퇴거연도 값은 대부분 비어 있음을 알 수 있습니다.</p>
+<p>다음 글에서는 어떻게 대략적인 판단을 바탕으로 결측치와 이상치를 처리할지 알아보도록 하겠습니다.</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
