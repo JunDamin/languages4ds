@@ -6,3 +6,9 @@ freeze: true
 
 # Enable banner style title blocks
 title-block-banner: true
+
+comments:
+  giscus: 
+    repo: JunDamin/recipes4ds
+  utterances:
+    repo: JunDamin/recipes4ds

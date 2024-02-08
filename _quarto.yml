@@ -4,6 +4,7 @@ project:
 website:
   title: "Practical Recipes for Data Science"
   favicon: images/siamese-cat.png
+  google-analytics: G-VSE5PGYZWW
   navbar:
     right:
       - about.qmd
