@@ -3,7 +3,7 @@ listing:
   id: landing-posts
   contents: data_science/posts
   type: default
-  max-items: 3
+  page-size: 6
   sort: 
     - "date desc"
     - "title asc"
